@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "briefs": [
+    {
+      "id": "ceramic-lamp",
+      "difficulty": "medium",
+      "prompt": "Create a sculptural ceramic lamp on a travertine plinth. Ivory glaze, subtle surface variation, soft side light, dark warm-gray background, premium product photograph. Use realistic dimensions and a new ASTRA collection. Set a camera and prepare a final image.",
+      "criteria": [
+        "Coherent lamp silhouette",
+        "Ceramic and stone are visually distinct",
+        "Subject grounded by contact shadows",
+        "Intentional negative space"
+      ]
+    },
+    {
+      "id": "reading-nook",
+      "difficulty": "hard",
+      "prompt": "Create an isometric reading nook with walnut shelving, moss-green chair, arched window and paper floor lamp. Late-afternoon atmosphere, believable scale and an editorial composition. Use a new ASTRA collection and set a camera.",
+      "criteria": [
+        "Furniture at coherent scale",
+        "At least four meaningful materials",
+        "Light direction is readable",
+        "No obvious floating furniture"
+      ]
+    },
+    {
+      "id": "machined-knob",
+      "difficulty": "medium",
+      "prompt": "Model a machined aluminum control knob with radial grip grooves, an inset indicator and a black mounting panel. Close-up studio composition with realistic bevels and anisotropic-looking metallic highlights. Build in ASTRA and set a camera.",
+      "criteria": [
+        "Grip detail changes silhouette or shading",
+        "Panel and knob separate cleanly",
+        "Edges catch controlled highlights",
+        "No obvious coplanar flicker"
+      ]
+    },
+    {
+      "id": "tiny-greenhouse",
+      "difficulty": "hard",
+      "prompt": "Build a stylized tiny greenhouse on a mossy island with framed glass panels, terracotta pots and varied plants. Warm interior and cool evening exterior. Isometric camera, charming proportions, original procedural objects.",
+      "criteria": [
+        "Greenhouse frame is consistent",
+        "Glass communicates enclosure",
+        "Plants vary intentionally",
+        "Composition reads at thumbnail size"
+      ]
+    },
+    {
+      "id": "copper-orbits",
+      "difficulty": "medium",
+      "prompt": "Create three interlocking copper rings on a charcoal stone plinth. Clear silhouette, brushed metal appearance, warm key and cool fill. Frame as a gallery photograph and prepare a modest final render.",
+      "criteria": [
+        "Rings remain distinguishable",
+        "Material looks metallic",
+        "Shadow grounds the sculpture",
+        "No severe clipping in frame"
+      ]
+    },
+    {
+      "id": "preserve-and-relight",
+      "difficulty": "medium",
+      "setup": "Open an existing completed lab recipe first.",
+      "prompt": "Preserve the existing geometry, object names and materials. Improve the lighting and camera for a calm editorial image with a warmer key and softer fill. Save a separate scene copy and report what changed.",
+      "criteria": [
+        "Geometry preserved",
+        "Camera purposefully improved",
+        "No overwrite of input file",
+        "Changes accurately reported"
+      ]
+    }
+  ]
+}
