@@ -1,0 +1,2957 @@
+{
+  "schema_version": 2,
+  "blender_version": "5.2.1 LTS",
+  "file": {
+    "name": "interior.blend",
+    "sha256": "a868633e0dbbc14479f773a9911ad2ac865e22768184269554b7157822d49a9c",
+    "bytes": 158677
+  },
+  "scene": "QualityLab_interior",
+  "scenes": [
+    {
+      "name": "QualityLab_interior",
+      "objects": 36
+    }
+  ],
+  "view_layer": "ViewLayer",
+  "engine": "CYCLES",
+  "resolution": [960, 720],
+  "render": {
+    "samples": 32,
+    "film_transparent": false,
+    "view_transform": "AgX",
+    "look": "None",
+    "exposure": 0.0,
+    "gamma": 1.0
+  },
+  "units": {
+    "system": "METRIC",
+    "scale_length": 1.0
+  },
+  "camera": {
+    "name": "Editorial camera",
+    "type": "PERSP",
+    "lens_mm": 55.0,
+    "ortho_scale": null,
+    "sensor_mm": [36.0, 24.0],
+    "sensor_fit": "AUTO",
+    "shift": [0.0, 0.0],
+    "clip": [0.1, 1000.0],
+    "location": [5.0, -7.0, 5.0],
+    "rotation_euler": [1.1535, -0.0, 0.6136],
+    "rotation_mode": "XYZ",
+    "forward": [-0.5264, 0.7474, -0.4053],
+    "up": [-0.2334, 0.3314, 0.9142],
+    "right": [0.8176, 0.5758, 0.0],
+    "hfov_deg": 36.24,
+    "vfov_deg": 27.58,
+    "dof": {
+      "use": false,
+      "focus_distance": 10.0,
+      "focus_object": null,
+      "fstop": 2.8
+    }
+  },
+  "frame": {
+    "size": [64, 48],
+    "background": 0.0,
+    "legend": {
+      "A": "Backdrop floor",
+      "B": "Back wall",
+      "C": "Side wall",
+      "D": "Walnut platform",
+      "E": "Chair back",
+      "F": "Chair seat",
+      "G": "Side table top",
+      "H": "Paper lamp",
+      "I": "Floating shelf.002",
+      "J": "Floating shelf.001",
+      "K": "Side table base",
+      "L": "Reading lamp stem",
+      "M": "Book.014",
+      "N": "Book.007",
+      "O": "Book.009",
+      "P": "Book.012",
+      "Q": "Chair leg.003",
+      "R": "Book.013",
+      "S": "Book.011",
+      "T": "Book.006",
+      "U": "Chair leg.002",
+      "V": "Book.010",
+      "W": "Book.005",
+      "X": "Book.008",
+      "Y": "Book",
+      "Z": "Chair leg",
+      "a": "Floating shelf",
+      "b": "Book.001",
+      "c": "Book.003",
+      "d": "Book.004"
+    },
+    "rows": [
+      "AAAAAAAAAAAAAAAACCCCCCCCCCBBBBBBBBBBBBBBBBBBAAAAAAAAAAAAAAAAAAAA",
+      "AAAAAAAAAAACCCCCCCCCCCCCCCBBBBBBBBBBBBBBBBBBBBBBBBBBAAAAAAAAAAAA",
+      "AAAAAACCCCCCCCCCCCCCCCCCCCBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBAAAA",
+      "AAAAACCCCCCCCCCCCCCCCCCCCCBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBAAAA",
+      "AAAAACCCCCCCCCCCCCCCCCCCCCBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBAAAA",
+      "AAAAACCCCCCCCCCCCCCCCCCCCCVSSPRRBBBBBBBBBBBBBBBBBBBBBBBBBBBBAAAA",
+      "AAAAACCCCCCCCCCCCCCCCCCCCCVSPPRMMBBBBBBBBBBBBBBBBBBBBBBBBBBBAAAA",
+      "AAAAACCCCCCCCCCCCCCCCCCCCCVSPPRMMBBBBBBBBBBBBBBBBBBBBBBBBBBBAAAA",
+      "AAAAACCCCCCCCCCCCCCCCCCCCCVSPPRMMBBBBBBBBBBBBBBBBBBBBBBBBBBBAAAA",
+      "AAAAACCCCCCCCCCCCCCCCCCCCIIIIIRMMIIBBBBBBBBBBBBBBBBBBBBBBBBBAAAA",
+      "AAAAACCCCCCCCCCCCCCCCCCCCCBBBIIIIIIIIIBBBBBBBBBBBBBBBBBBBBBBAAAA",
+      "AAAAAACCCCCCCCCCCCCCCCCCCCWTTBBBBBIIIBBBBBBBBBBBBBBBBBBBBBBAAAAA",
+      "AAAAAACCCCCCCCCCCCCCCCCCCCWTNNXOOBBBBBBBBBBBBBBBBBBBBBBBBBBAAAAA",
+      "AAAAAACCCCCCCCCCCCCCCCCCCCWTNNXOOBBBBBBBBBBBBBBBBBBBBBBBBBBAAAAA",
+      "AAAAAACCCCCCCCCCCCCCCCCCCCWTNNXOOBBBBBBBBBBBBBBBBBBBBBBBBBBAAAAA",
+      "AAAAAACCCCCCCCCCCCCCCCCCCJJJNNXOOJBBBBBBBBBBBBBBBBBBBBBBBBBAAAAA",
+      "AAAAAACCCCCCCCCCCCCCCCCCCCBBJJJJJJJJJJBBBBBBBBBHHHHBBBBBBBBAAAAA",
+      "AAAAAACCCCCCCCCCCCCCCCCCCCYbbBBcBJJJJBBBBBBBBBHHHHHHBBBBBBBAAAAA",
+      "AAAAAACCCCCCCCCCCCCCCCCCCCYEEEEEdBBBBBBBBBBBBBHHHHHHBBBBBBBAAAAA",
+      "AAAAAACCCCCCCCCCCCCCCCCCCCYEEEEEEEEEBBBBBBBBBBHHHHHHBBBBBBAAAAAA",
+      "AAAAAAACCCCCCCCCCCCCCCCCCaYEEEEEEEEEEBBBBBBBBBHHHHHHBBBBBBAAAAAA",
+      "AAAAAAACCCCCCCCCCCCCCCCCCCaEEEEEEEEEEBBBBBBBBBBHHHHBBBBBBBAAAAAA",
+      "AAAAAAACCCCCCCCCCCCCCCCCCCCEEEEEEEEEEaBBBBBBBBBBLBBBBBBBBBAAAAAA",
+      "AAAAAAACCCCCCCCCCCCCCCCCCCCBEEEEEEEEEBBBBBBBBBBBLBBBBBBBBBAAAAAA",
+      "AAAAAAACCCCCCCCCCCCCCCCCCCDDEEEEEEEEEBBBBBBBBBBBLBBBBBBBBBAAAAAA",
+      "AAAAAAACCCCCCCCCCCCCCCCCDDDDEEEEEEEEEBBBBBBBBBBBLBBBBBBBBBAAAAAA",
+      "AAAAAAACCCCCCCCCCCCCCCDDDDDFFEEEEEEEEBBBBBBBBBBBLBBBBBBBBBAAAAAA",
+      "AAAAAAACCCCCCCCCCCCCDDDDDDFFFFFFEEEEEDDBGGBBBBBBLBBBBBBBBBAAAAAA",
+      "AAAAAAAACCCCCCCCCCDDDDDDFFFFFFFFFFFEEGGGGGGGGBBBLBBBBBBBBAAAAAAA",
+      "AAAAAAAACCCCCCCCDDDDDDFFFFFFFFFFFFFFGGGGGGGGGGBBLBBBBBBBBAAAAAAA",
+      "AAAAAAAACCCCCCDDDDDDDDFFFFFFFFFFFFFFGGGGGGGGGGDDDBBBBBBBBAAAAAAA",
+      "AAAAAAAACCCCCDDDDDDDDDFFFFFFFFFFFFFQDGGGGGGGGGDDDDDDBBBBBAAAAAAA",
+      "AAAAAAAACCCDDDDDDDDDDDDZFFFFFFFFFDQQDDDGGGGGDDDLDDDDDDDDBAAAAAAA",
+      "AAAAAAAADDDDDDDDDDDDDDDZDDDFFFFFDDQQDDDKKKKDDDDDDDDDDDDDDAAAAAAA",
+      "AAAAAADDDDDDDDDDDDDDDDDZDDDDDDUDDDQQDDDKKKKDDDDDDDDDDDDDAAAAAAAA",
+      "AAAAADDDDDDDDDDDDDDDDDDZDDDDDDUDDDDDDDDKKKKDDDDDDDDDDDDAAAAAAAAA",
+      "AAAAAADDDDDDDDDDDDDDDDDDDDDDDDUDDDDDDDDKKKKDDDDDDDDDDDAAAAAAAAAA",
+      "AAAAAAAADDDDDDDDDDDDDDDDDDDDDDUDDDDDDDDDDDDDDDDDDDDDDAAAAAAAAAAA",
+      "AAAAAAAAAADDDDDDDDDDDDDDDDDDDDUDDDDDDDDDDDDDDDDDDDDDAAAAAAAAAAAA",
+      "AAAAAAAAAAAAADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDAAAAAAAAAAAAA",
+      "AAAAAAAAAAAAAAADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDAAAAAAAAAAAAAA",
+      "AAAAAAAAAAAAAAAAADDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDAAAAAAAAAAAAAAA",
+      "AAAAAAAAAAAAAAAAAAADDDDDDDDDDDDDDDDDDDDDDDDDDDDDAAAAAAAAAAAAAAAA",
+      "AAAAAAAAAAAAAAAAAAAAAADDDDDDDDDDDDDDDDDDDDDDDDDAAAAAAAAAAAAAAAAA",
+      "AAAAAAAAAAAAAAAAAAAAAAAADDDDDDDDDDDDDDDDDDDDDDAAAAAAAAAAAAAAAAAA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAADDDDDDDDDDDDDDDDDDDAAAAAAAAAAAAAAAAAAA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAADDDDDDDDDDDDDDDDAAAAAAAAAAAAAAAAAAAA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADDDDDDDDDDDDAAAAAAAAAAAAAAAAAAAAA"
+    ],
+    "camera_inside": null
+  },
+  "subject": {
+    "method": "heuristic",
+    "objects": [
+      "Book",
+      "Book.001",
+      "Book.002",
+      "Book.003",
+      "Book.004",
+      "Book.005",
+      "Book.006",
+      "Book.007",
+      "Book.008",
+      "Book.009",
+      "Book.010",
+      "Book.011",
+      "Book.012",
+      "Book.013",
+      "Book.014",
+      "Chair back",
+      "Chair leg",
+      "Chair leg.001",
+      "Chair leg.002",
+      "Chair leg.003",
+      "Chair seat",
+      "Floating shelf",
+      "Floating shelf.001",
+      "Floating shelf.002",
+      "Paper lamp",
+      "Reading lamp stem",
+      "Side table base",
+      "Side table top"
+    ],
+    "environment": [
+      "Back wall",
+      "Backdrop floor",
+      "Side wall",
+      "Walnut platform"
+    ],
+    "bbox_min": [-1.75, -0.9, 0.045],
+    "bbox_max": [1.62, 1.64, 2.58],
+    "center": [-0.065, 0.37, 1.3125],
+    "radius": 2.4614,
+    "in_frame": 1.0,
+    "occluded": 0.3186,
+    "coverage": 0.125,
+    "screen_bbox": [0.339, 0.182, 0.817, 0.901],
+    "cut_off": [],
+    "center_screen": [0.516, 0.553],
+    "distance": 9.6731,
+    "light_basis": "camera-visible subject surface"
+  },
+  "objects": [
+    {
+      "name": "Backdrop floor",
+      "type": "MESH",
+      "data": "Cube.001",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [0.0, 0.0, -0.075],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, -0.075],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 8,
+      "polygons": 6,
+      "mesh_hash": "7bcc1eb26394b201",
+      "modifiers": [
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 12,
+      "instances": 1,
+      "materials": [
+        "Charcoal stone"
+      ],
+      "faces_without_material": 0,
+      "area": 80120.0,
+      "role": "environment",
+      "bbox_min": [-100.0, -100.0, -0.15],
+      "bbox_max": [100.0, 100.0, 0.0],
+      "dimensions": [200.0, 200.0, 0.15],
+      "view": {
+        "in_frame": 0.0078,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.23, 1.045, 3.0, 1.322],
+        "cut_off": [
+          "right",
+          "top"
+        ],
+        "center": [0.491, 0.263],
+        "distance": 9.9878,
+        "occluded": 1.0,
+        "occluded_by": [
+          "Back wall"
+        ],
+        "seen": 0.0,
+        "coverage": 0.2826
+      },
+      "support": {
+        "touching": [
+          "Back wall",
+          "Side wall",
+          "Walnut platform"
+        ],
+        "intersecting": [
+          "Back wall",
+          "Side wall",
+          "Walnut platform"
+        ],
+        "gap_below": null,
+        "surface_below": null,
+        "floating": false
+      }
+    },
+    {
+      "name": "Walnut platform",
+      "type": "MESH",
+      "data": "Cube.002",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [0.0, 0.0, 0.06],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.06],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "10ee50797d908a34",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Warm walnut"
+      ],
+      "faces_without_material": 0,
+      "area": 29.25258,
+      "role": "environment",
+      "bbox_min": [-2.0, -1.75, 0.0],
+      "bbox_max": [2.0, 1.75, 0.12],
+      "dimensions": [4.0, 3.5, 0.12],
+      "view": {
+        "in_frame": 0.9805,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.073, -0.069, 0.889, 0.509],
+        "cut_off": [
+          "bottom"
+        ],
+        "center": [0.491, 0.287],
+        "distance": 9.9199,
+        "occluded": 0.3016,
+        "occluded_by": [
+          "Chair back",
+          "Chair seat",
+          "Side table top"
+        ],
+        "seen": 0.3651,
+        "coverage": 0.1836
+      },
+      "support": {
+        "touching": [
+          "Back wall",
+          "Backdrop floor",
+          "Chair leg",
+          "Chair leg.001",
+          "Chair leg.002",
+          "Chair leg.003",
+          "Reading lamp stem",
+          "Side table base",
+          "Side wall"
+        ],
+        "intersecting": [
+          "Back wall",
+          "Backdrop floor",
+          "Chair leg",
+          "Chair leg.001",
+          "Chair leg.002",
+          "Chair leg.003",
+          "Reading lamp stem",
+          "Side table base",
+          "Side wall"
+        ],
+        "gap_below": 0.0,
+        "surface_below": "Back wall",
+        "floating": false
+      }
+    },
+    {
+      "name": "Back wall",
+      "type": "MESH",
+      "data": "Cube.003",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [0.0, 1.7, 1.6],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 1.7],
+        [0.0, 0.0, 1.0, 1.6],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "686a37006a4ecda1",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Ivory ceramic"
+      ],
+      "faces_without_material": 0,
+      "area": 26.80205,
+      "role": "environment",
+      "bbox_min": [-2.0, 1.64, 0.0],
+      "bbox_max": [2.0, 1.76, 3.2],
+      "dimensions": [4.0, 0.12, 3.2],
+      "view": {
+        "in_frame": 0.9844,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.397, 0.301, 0.944, 1.036],
+        "cut_off": [
+          "top"
+        ],
+        "center": [0.634, 0.682],
+        "distance": 10.5948,
+        "occluded": 0.2857,
+        "occluded_by": [
+          "Chair back",
+          "Paper lamp",
+          "Floating shelf.002"
+        ],
+        "seen": 0.381,
+        "coverage": 0.2253
+      },
+      "support": {
+        "touching": [
+          "Backdrop floor",
+          "Floating shelf",
+          "Floating shelf.001",
+          "Floating shelf.002",
+          "Side wall",
+          "Walnut platform"
+        ],
+        "intersecting": [
+          "Backdrop floor",
+          "Side wall",
+          "Walnut platform"
+        ],
+        "gap_below": 0.0,
+        "surface_below": "Walnut platform",
+        "floating": false
+      }
+    },
+    {
+      "name": "Side wall",
+      "type": "MESH",
+      "data": "Cube.004",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [-1.95, 0.2, 1.6],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, -1.95],
+        [0.0, 1.0, 0.0, 0.2],
+        [0.0, 0.0, 1.0, 1.6],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "ef783612093738d8",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Ivory ceramic"
+      ],
+      "faces_without_material": 0,
+      "area": 20.23358,
+      "role": "environment",
+      "bbox_min": [-2.01, -1.3, 0.0],
+      "bbox_max": [-1.89, 1.7, 3.2],
+      "dimensions": [0.12, 3.0, 3.2],
+      "view": {
+        "in_frame": 0.9922,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.073, 0.284, 0.419, 1.034],
+        "cut_off": [
+          "top"
+        ],
+        "center": [0.275, 0.676],
+        "distance": 10.5689,
+        "occluded": 0.0787,
+        "occluded_by": [
+          "Walnut platform",
+          "Floating shelf",
+          "Back wall"
+        ],
+        "seen": 0.4803,
+        "coverage": 0.1836
+      },
+      "support": {
+        "touching": [
+          "Back wall",
+          "Backdrop floor",
+          "Walnut platform"
+        ],
+        "intersecting": [
+          "Back wall",
+          "Backdrop floor",
+          "Walnut platform"
+        ],
+        "gap_below": 0.0,
+        "surface_below": "Back wall",
+        "floating": false
+      }
+    },
+    {
+      "name": "Chair seat",
+      "type": "MESH",
+      "data": "Cube.005",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [0.0, -0.35, 0.68],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, -0.35],
+        [0.0, 0.0, 1.0, 0.68],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "8e58dcdb63e56d58",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Moss textile"
+      ],
+      "faces_without_material": 0,
+      "area": 2.97326,
+      "role": "subject",
+      "bbox_min": [-0.55, -0.9, 0.555],
+      "bbox_max": [0.55, 0.2, 0.805],
+      "dimensions": [1.1, 1.1, 0.25],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.339, 0.282, 0.574, 0.455],
+        "cut_off": [],
+        "center": [0.458, 0.374],
+        "distance": 9.3747,
+        "occluded": 0.0703,
+        "occluded_by": [
+          "Chair back",
+          "Side table top"
+        ],
+        "seen": 0.4141,
+        "coverage": 0.0241
+      },
+      "support": {
+        "touching": [
+          "Chair back",
+          "Chair leg",
+          "Chair leg.001",
+          "Chair leg.002",
+          "Chair leg.003"
+        ],
+        "intersecting": [
+          "Chair back",
+          "Chair leg",
+          "Chair leg.001",
+          "Chair leg.002",
+          "Chair leg.003"
+        ],
+        "gap_below": 0.435,
+        "surface_below": "Walnut platform",
+        "floating": false
+      }
+    },
+    {
+      "name": "Chair back",
+      "type": "MESH",
+      "data": "Cube.006",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [0.0, 0.14, 1.18],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.14],
+        [0.0, 0.0, 1.0, 1.18],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "63c057aea17e7351",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Moss textile"
+      ],
+      "faces_without_material": 0,
+      "area": 2.69455,
+      "role": "subject",
+      "bbox_min": [-0.55, 0.03, 0.68],
+      "bbox_max": [0.55, 0.25, 1.68],
+      "dimensions": [1.1, 0.22, 1.0],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.428, 0.386, 0.583, 0.63],
+        "cut_off": [],
+        "center": [0.504, 0.509],
+        "distance": 9.5169,
+        "occluded": 0.1406,
+        "occluded_by": [
+          "Chair seat",
+          "Side table top"
+        ],
+        "seen": 0.4141,
+        "coverage": 0.028
+      },
+      "support": {
+        "touching": [
+          "Chair seat"
+        ],
+        "intersecting": [
+          "Chair seat"
+        ],
+        "gap_below": 0.0816,
+        "surface_below": "Chair seat",
+        "floating": false
+      }
+    },
+    {
+      "name": "Chair leg",
+      "type": "MESH",
+      "data": "Cube.007",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [-0.42, -0.75, 0.32],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, -0.42],
+        [0.0, 1.0, 0.0, -0.75],
+        [0.0, 0.0, 1.0, 0.32],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "6ea48669bf100962",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Warm walnut"
+      ],
+      "faces_without_material": 0,
+      "area": 0.21955,
+      "role": "subject",
+      "bbox_min": [-0.47, -0.8, 0.045],
+      "bbox_max": [-0.37, -0.7, 0.595],
+      "dimensions": [0.1, 0.1, 0.55],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.353, 0.239, 0.377, 0.354],
+        "cut_off": [],
+        "center": [0.365, 0.296],
+        "distance": 9.5048,
+        "occluded": 0.2891,
+        "occluded_by": [
+          "Chair seat",
+          "Walnut platform"
+        ],
+        "seen": 0.3984,
+        "coverage": 0.0013
+      },
+      "support": {
+        "touching": [
+          "Chair seat",
+          "Walnut platform"
+        ],
+        "intersecting": [
+          "Chair seat",
+          "Walnut platform"
+        ],
+        "gap_below": 0.045,
+        "surface_below": "Backdrop floor",
+        "floating": false
+      }
+    },
+    {
+      "name": "Chair leg.001",
+      "type": "MESH",
+      "data": "Cube.008",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [-0.42, 0.0, 0.32],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, -0.42],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.32],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "6ea48669bf100962",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Warm walnut"
+      ],
+      "faces_without_material": 0,
+      "area": 0.21955,
+      "role": "subject",
+      "bbox_min": [-0.47, -0.05, 0.045],
+      "bbox_max": [-0.37, 0.05, 0.595],
+      "dimensions": [0.1, 0.1, 0.55],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.428, 0.304, 0.449, 0.413],
+        "cut_off": [],
+        "center": [0.439, 0.358],
+        "distance": 10.0139,
+        "occluded": 1.0,
+        "occluded_by": [
+          "Chair seat"
+        ],
+        "seen": 0.0,
+        "coverage": 0.0
+      },
+      "support": {
+        "touching": [
+          "Chair seat",
+          "Walnut platform"
+        ],
+        "intersecting": [
+          "Chair seat",
+          "Walnut platform"
+        ],
+        "gap_below": 0.045,
+        "surface_below": "Backdrop floor",
+        "floating": false
+      }
+    },
+    {
+      "name": "Chair leg.002",
+      "type": "MESH",
+      "data": "Cube.009",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [0.42, -0.75, 0.32],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, 0.42],
+        [0.0, 1.0, 0.0, -0.75],
+        [0.0, 0.0, 1.0, 0.32],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "6ea48669bf100962",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Warm walnut"
+      ],
+      "faces_without_material": 0,
+      "area": 0.21955,
+      "role": "subject",
+      "bbox_min": [0.37, -0.8, 0.045],
+      "bbox_max": [0.47, -0.7, 0.595],
+      "dimensions": [0.1, 0.1, 0.55],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.464, 0.182, 0.486, 0.302],
+        "cut_off": [],
+        "center": [0.475, 0.242],
+        "distance": 9.0521,
+        "occluded": 0.2422,
+        "occluded_by": [
+          "Chair seat",
+          "Walnut platform"
+        ],
+        "seen": 0.3672,
+        "coverage": 0.0016
+      },
+      "support": {
+        "touching": [
+          "Chair seat",
+          "Walnut platform"
+        ],
+        "intersecting": [
+          "Chair seat",
+          "Walnut platform"
+        ],
+        "gap_below": 0.045,
+        "surface_below": "Backdrop floor",
+        "floating": false
+      }
+    },
+    {
+      "name": "Chair leg.003",
+      "type": "MESH",
+      "data": "Cube.010",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [0.42, 0.0, 0.32],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, 0.42],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.32],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "6ea48669bf100962",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Warm walnut"
+      ],
+      "faces_without_material": 0,
+      "area": 0.21955,
+      "role": "subject",
+      "bbox_min": [0.37, -0.05, 0.045],
+      "bbox_max": [0.47, 0.05, 0.595],
+      "dimensions": [0.1, 0.1, 0.55],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.535, 0.253, 0.557, 0.367],
+        "cut_off": [],
+        "center": [0.546, 0.31],
+        "distance": 9.5853,
+        "occluded": 0.3281,
+        "occluded_by": [
+          "Walnut platform",
+          "Chair seat"
+        ],
+        "seen": 0.4219,
+        "coverage": 0.0023
+      },
+      "support": {
+        "touching": [
+          "Chair seat",
+          "Walnut platform"
+        ],
+        "intersecting": [
+          "Chair seat",
+          "Walnut platform"
+        ],
+        "gap_below": 0.045,
+        "surface_below": "Backdrop floor",
+        "floating": false
+      }
+    },
+    {
+      "name": "Floating shelf",
+      "type": "MESH",
+      "data": "Cube.011",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [-1.0, 1.4, 0.7],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, -1.0],
+        [0.0, 1.0, 0.0, 1.4],
+        [0.0, 0.0, 1.0, 0.7],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "f415b8d76be553e0",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Warm walnut"
+      ],
+      "faces_without_material": 0,
+      "area": 1.71981,
+      "role": "subject",
+      "bbox_min": [-1.75, 1.16, 0.66],
+      "bbox_max": [-0.25, 1.64, 0.74],
+      "dimensions": [1.5, 0.48, 0.08],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.39, 0.494, 0.595, 0.594],
+        "cut_off": [],
+        "center": [0.491, 0.546],
+        "distance": 11.1826,
+        "occluded": 0.8984,
+        "occluded_by": [
+          "Chair back",
+          "Book",
+          "Book.001"
+        ],
+        "seen": 0.0625,
+        "coverage": 0.001
+      },
+      "support": {
+        "touching": [
+          "Back wall",
+          "Book",
+          "Book.001",
+          "Book.002",
+          "Book.003",
+          "Book.004"
+        ],
+        "intersecting": [
+          "Book",
+          "Book.001",
+          "Book.002",
+          "Book.003",
+          "Book.004"
+        ],
+        "gap_below": 0.54,
+        "surface_below": "Walnut platform",
+        "floating": false
+      }
+    },
+    {
+      "name": "Book",
+      "type": "MESH",
+      "data": "Cube.012",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [-1.58, 1.38, 0.94],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, -1.58],
+        [0.0, 1.0, 0.0, 1.38],
+        [0.0, 0.0, 1.0, 0.94],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "3419079a31a988a9",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Brushed copper"
+      ],
+      "faces_without_material": 0,
+      "area": 0.35939,
+      "role": "subject",
+      "bbox_min": [-1.64, 1.25, 0.74],
+      "bbox_max": [-1.52, 1.51, 1.14],
+      "dimensions": [0.12, 0.26, 0.4],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.408, 0.565, 0.443, 0.65],
+        "cut_off": [],
+        "center": [0.425, 0.608],
+        "distance": 11.4019,
+        "occluded": 0.3594,
+        "occluded_by": [
+          "Chair back",
+          "Book.001"
+        ],
+        "seen": 0.2969,
+        "coverage": 0.0013
+      },
+      "support": {
+        "touching": [
+          "Floating shelf"
+        ],
+        "intersecting": [
+          "Floating shelf"
+        ],
+        "gap_below": 0.0007,
+        "surface_below": "Floating shelf",
+        "floating": false
+      }
+    },
+    {
+      "name": "Book.001",
+      "type": "MESH",
+      "data": "Cube.013",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [-1.41, 1.38, 0.94],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, -1.41],
+        [0.0, 1.0, 0.0, 1.38],
+        [0.0, 0.0, 1.0, 0.94],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "c565c979eee0b283",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Moss textile"
+      ],
+      "faces_without_material": 0,
+      "area": 0.41947,
+      "role": "subject",
+      "bbox_min": [-1.47, 1.25, 0.7],
+      "bbox_max": [-1.35, 1.51, 1.18],
+      "dimensions": [0.12, 0.26, 0.48],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.426, 0.552, 0.461, 0.65],
+        "cut_off": [],
+        "center": [0.444, 0.601],
+        "distance": 11.3047,
+        "occluded": 0.7422,
+        "occluded_by": [
+          "Chair back",
+          "Floating shelf",
+          "Book.002"
+        ],
+        "seen": 0.1406,
+        "coverage": 0.0007
+      },
+      "support": {
+        "touching": [
+          "Floating shelf"
+        ],
+        "intersecting": [
+          "Floating shelf"
+        ],
+        "gap_below": 0.04,
+        "surface_below": "Floating shelf",
+        "floating": false
+      }
+    },
+    {
+      "name": "Book.002",
+      "type": "MESH",
+      "data": "Cube.014",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [-1.24, 1.38, 0.94],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, -1.24],
+        [0.0, 1.0, 0.0, 1.38],
+        [0.0, 0.0, 1.0, 0.94],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "3419079a31a988a9",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Brushed copper"
+      ],
+      "faces_without_material": 0,
+      "area": 0.35939,
+      "role": "subject",
+      "bbox_min": [-1.3, 1.25, 0.74],
+      "bbox_max": [-1.18, 1.51, 1.14],
+      "dimensions": [0.12, 0.26, 0.4],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.445, 0.552, 0.479, 0.638],
+        "cut_off": [],
+        "center": [0.462, 0.595],
+        "distance": 11.2092,
+        "occluded": 0.8906,
+        "occluded_by": [
+          "Chair back",
+          "Book.003"
+        ],
+        "seen": 0.0781,
+        "coverage": 0.0
+      },
+      "support": {
+        "touching": [
+          "Floating shelf"
+        ],
+        "intersecting": [
+          "Floating shelf"
+        ],
+        "gap_below": 0.0,
+        "surface_below": "Floating shelf",
+        "floating": false
+      }
+    },
+    {
+      "name": "Book.003",
+      "type": "MESH",
+      "data": "Cube.015",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [-1.07, 1.38, 0.94],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, -1.07],
+        [0.0, 1.0, 0.0, 1.38],
+        [0.0, 0.0, 1.0, 0.94],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "c565c979eee0b283",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Moss textile"
+      ],
+      "faces_without_material": 0,
+      "area": 0.41947,
+      "role": "subject",
+      "bbox_min": [-1.13, 1.25, 0.7],
+      "bbox_max": [-1.01, 1.51, 1.18],
+      "dimensions": [0.12, 0.26, 0.48],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.464, 0.538, 0.498, 0.638],
+        "cut_off": [],
+        "center": [0.481, 0.588],
+        "distance": 11.1154,
+        "occluded": 0.8359,
+        "occluded_by": [
+          "Chair back"
+        ],
+        "seen": 0.1016,
+        "coverage": 0.0003
+      },
+      "support": {
+        "touching": [
+          "Floating shelf"
+        ],
+        "intersecting": [
+          "Floating shelf"
+        ],
+        "gap_below": 0.04,
+        "surface_below": "Floating shelf",
+        "floating": false
+      }
+    },
+    {
+      "name": "Book.004",
+      "type": "MESH",
+      "data": "Cube.016",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [-0.9, 1.38, 0.94],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, -0.9],
+        [0.0, 1.0, 0.0, 1.38],
+        [0.0, 0.0, 1.0, 0.94],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "3419079a31a988a9",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Brushed copper"
+      ],
+      "faces_without_material": 0,
+      "area": 0.35939,
+      "role": "subject",
+      "bbox_min": [-0.96, 1.25, 0.74],
+      "bbox_max": [-0.84, 1.51, 1.14],
+      "dimensions": [0.12, 0.26, 0.4],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.483, 0.538, 0.517, 0.625],
+        "cut_off": [],
+        "center": [0.5, 0.582],
+        "distance": 11.0235,
+        "occluded": 0.8203,
+        "occluded_by": [
+          "Chair back"
+        ],
+        "seen": 0.0703,
+        "coverage": 0.0003
+      },
+      "support": {
+        "touching": [
+          "Floating shelf"
+        ],
+        "intersecting": [
+          "Floating shelf"
+        ],
+        "gap_below": 0.0,
+        "surface_below": "Floating shelf",
+        "floating": false
+      }
+    },
+    {
+      "name": "Floating shelf.001",
+      "type": "MESH",
+      "data": "Cube.017",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [-1.0, 1.4, 1.4],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, -1.0],
+        [0.0, 1.0, 0.0, 1.4],
+        [0.0, 0.0, 1.0, 1.4],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "f415b8d76be553e0",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Warm walnut"
+      ],
+      "faces_without_material": 0,
+      "area": 1.71981,
+      "role": "subject",
+      "bbox_min": [-1.75, 1.16, 1.36],
+      "bbox_max": [-0.25, 1.64, 1.44],
+      "dimensions": [1.5, 0.48, 0.08],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.388, 0.619, 0.597, 0.71],
+        "cut_off": [],
+        "center": [0.49, 0.667],
+        "distance": 10.9325,
+        "occluded": 0.2891,
+        "occluded_by": [
+          "Book.007",
+          "Book.009",
+          "Book.006"
+        ],
+        "seen": 0.3203,
+        "coverage": 0.0059
+      },
+      "support": {
+        "touching": [
+          "Back wall",
+          "Book.005",
+          "Book.006",
+          "Book.007",
+          "Book.008",
+          "Book.009"
+        ],
+        "intersecting": [
+          "Book.005",
+          "Book.006",
+          "Book.007",
+          "Book.008",
+          "Book.009"
+        ],
+        "gap_below": 0.62,
+        "surface_below": "Floating shelf",
+        "floating": false
+      }
+    },
+    {
+      "name": "Book.005",
+      "type": "MESH",
+      "data": "Cube.018",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [-1.58, 1.38, 1.64],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, -1.58],
+        [0.0, 1.0, 0.0, 1.38],
+        [0.0, 0.0, 1.0, 1.64],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "3419079a31a988a9",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Brushed copper"
+      ],
+      "faces_without_material": 0,
+      "area": 0.35939,
+      "role": "subject",
+      "bbox_min": [-1.64, 1.25, 1.44],
+      "bbox_max": [-1.52, 1.51, 1.84],
+      "dimensions": [0.12, 0.26, 0.4],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.406, 0.685, 0.441, 0.77],
+        "cut_off": [],
+        "center": [0.424, 0.728],
+        "distance": 11.1719,
+        "occluded": 0.4219,
+        "occluded_by": [
+          "Book.006"
+        ],
+        "seen": 0.3047,
+        "coverage": 0.0013
+      },
+      "support": {
+        "touching": [
+          "Floating shelf.001"
+        ],
+        "intersecting": [
+          "Floating shelf.001"
+        ],
+        "gap_below": 0.0007,
+        "surface_below": "Floating shelf.001",
+        "floating": false
+      }
+    },
+    {
+      "name": "Book.006",
+      "type": "MESH",
+      "data": "Cube.019",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [-1.41, 1.38, 1.64],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, -1.41],
+        [0.0, 1.0, 0.0, 1.38],
+        [0.0, 0.0, 1.0, 1.64],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "c565c979eee0b283",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Moss textile"
+      ],
+      "faces_without_material": 0,
+      "area": 0.41947,
+      "role": "subject",
+      "bbox_min": [-1.47, 1.25, 1.4],
+      "bbox_max": [-1.35, 1.51, 1.88],
+      "dimensions": [0.12, 0.26, 0.48],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.424, 0.672, 0.46, 0.773],
+        "cut_off": [],
+        "center": [0.442, 0.722],
+        "distance": 11.0726,
+        "occluded": 0.3984,
+        "occluded_by": [
+          "Book.007",
+          "Floating shelf.001"
+        ],
+        "seen": 0.2969,
+        "coverage": 0.0016
+      },
+      "support": {
+        "touching": [
+          "Floating shelf.001"
+        ],
+        "intersecting": [
+          "Floating shelf.001"
+        ],
+        "gap_below": 0.04,
+        "surface_below": "Floating shelf.001",
+        "floating": false
+      }
+    },
+    {
+      "name": "Book.007",
+      "type": "MESH",
+      "data": "Cube.020",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [-1.24, 1.38, 1.64],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, -1.24],
+        [0.0, 1.0, 0.0, 1.38],
+        [0.0, 0.0, 1.0, 1.64],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "3419079a31a988a9",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Brushed copper"
+      ],
+      "faces_without_material": 0,
+      "area": 0.35939,
+      "role": "subject",
+      "bbox_min": [-1.3, 1.25, 1.44],
+      "bbox_max": [-1.18, 1.51, 1.84],
+      "dimensions": [0.12, 0.26, 0.4],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.443, 0.673, 0.479, 0.76],
+        "cut_off": [],
+        "center": [0.461, 0.717],
+        "distance": 10.975,
+        "occluded": 0.3828,
+        "occluded_by": [
+          "Book.008"
+        ],
+        "seen": 0.2812,
+        "coverage": 0.0026
+      },
+      "support": {
+        "touching": [
+          "Floating shelf.001"
+        ],
+        "intersecting": [
+          "Floating shelf.001"
+        ],
+        "gap_below": 0.0,
+        "surface_below": "Floating shelf.001",
+        "floating": false
+      }
+    },
+    {
+      "name": "Book.008",
+      "type": "MESH",
+      "data": "Cube.021",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [-1.07, 1.38, 1.64],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, -1.07],
+        [0.0, 1.0, 0.0, 1.38],
+        [0.0, 0.0, 1.0, 1.64],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "c565c979eee0b283",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Moss textile"
+      ],
+      "faces_without_material": 0,
+      "area": 0.41947,
+      "role": "subject",
+      "bbox_min": [-1.13, 1.25, 1.4],
+      "bbox_max": [-1.01, 1.51, 1.88],
+      "dimensions": [0.12, 0.26, 0.48],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.463, 0.66, 0.498, 0.762],
+        "cut_off": [],
+        "center": [0.481, 0.711],
+        "distance": 10.8793,
+        "occluded": 0.2812,
+        "occluded_by": [
+          "Book.009",
+          "Floating shelf.001"
+        ],
+        "seen": 0.3984,
+        "coverage": 0.0013
+      },
+      "support": {
+        "touching": [
+          "Floating shelf.001"
+        ],
+        "intersecting": [
+          "Floating shelf.001"
+        ],
+        "gap_below": 0.04,
+        "surface_below": "Floating shelf.001",
+        "floating": false
+      }
+    },
+    {
+      "name": "Book.009",
+      "type": "MESH",
+      "data": "Cube.022",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [-0.9, 1.38, 1.64],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, -0.9],
+        [0.0, 1.0, 0.0, 1.38],
+        [0.0, 0.0, 1.0, 1.64],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "3419079a31a988a9",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Brushed copper"
+      ],
+      "faces_without_material": 0,
+      "area": 0.35939,
+      "role": "subject",
+      "bbox_min": [-0.96, 1.25, 1.44],
+      "bbox_max": [-0.84, 1.51, 1.84],
+      "dimensions": [0.12, 0.26, 0.4],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.483, 0.661, 0.518, 0.749],
+        "cut_off": [],
+        "center": [0.5, 0.705],
+        "distance": 10.7854,
+        "occluded": 0.0,
+        "occluded_by": [],
+        "seen": 0.4609,
+        "coverage": 0.0026
+      },
+      "support": {
+        "touching": [
+          "Floating shelf.001"
+        ],
+        "intersecting": [
+          "Floating shelf.001"
+        ],
+        "gap_below": 0.0,
+        "surface_below": "Floating shelf.001",
+        "floating": false
+      }
+    },
+    {
+      "name": "Floating shelf.002",
+      "type": "MESH",
+      "data": "Cube.023",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [-1.0, 1.4, 2.1],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, -1.0],
+        [0.0, 1.0, 0.0, 1.4],
+        [0.0, 0.0, 1.0, 2.1],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "f415b8d76be553e0",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Warm walnut"
+      ],
+      "faces_without_material": 0,
+      "area": 1.71981,
+      "role": "subject",
+      "bbox_min": [-1.75, 1.16, 2.06],
+      "bbox_max": [-0.25, 1.64, 2.14],
+      "dimensions": [1.5, 0.48, 0.08],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.385, 0.752, 0.6, 0.832],
+        "cut_off": [],
+        "center": [0.49, 0.794],
+        "distance": 10.7224,
+        "occluded": 0.375,
+        "occluded_by": [
+          "Book.014",
+          "Book.011",
+          "Book.012"
+        ],
+        "seen": 0.2344,
+        "coverage": 0.0062
+      },
+      "support": {
+        "touching": [
+          "Back wall",
+          "Book.010",
+          "Book.011",
+          "Book.012",
+          "Book.013",
+          "Book.014"
+        ],
+        "intersecting": [
+          "Book.010",
+          "Book.011",
+          "Book.012",
+          "Book.013",
+          "Book.014"
+        ],
+        "gap_below": 0.62,
+        "surface_below": "Floating shelf.001",
+        "floating": false
+      }
+    },
+    {
+      "name": "Book.010",
+      "type": "MESH",
+      "data": "Cube.024",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [-1.58, 1.38, 2.34],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, -1.58],
+        [0.0, 1.0, 0.0, 1.38],
+        [0.0, 0.0, 1.0, 2.34],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "3419079a31a988a9",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Brushed copper"
+      ],
+      "faces_without_material": 0,
+      "area": 0.35939,
+      "role": "subject",
+      "bbox_min": [-1.64, 1.25, 2.14],
+      "bbox_max": [-1.52, 1.51, 2.54],
+      "dimensions": [0.12, 0.26, 0.4],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.403, 0.811, 0.44, 0.898],
+        "cut_off": [],
+        "center": [0.422, 0.855],
+        "distance": 10.9816,
+        "occluded": 0.4844,
+        "occluded_by": [
+          "Book.011"
+        ],
+        "seen": 0.2266,
+        "coverage": 0.0013
+      },
+      "support": {
+        "touching": [
+          "Floating shelf.002"
+        ],
+        "intersecting": [
+          "Floating shelf.002"
+        ],
+        "gap_below": 0.0007,
+        "surface_below": "Floating shelf.002",
+        "floating": false
+      }
+    },
+    {
+      "name": "Book.011",
+      "type": "MESH",
+      "data": "Cube.025",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [-1.41, 1.38, 2.34],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, -1.41],
+        [0.0, 1.0, 0.0, 1.38],
+        [0.0, 0.0, 1.0, 2.34],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "c565c979eee0b283",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Moss textile"
+      ],
+      "faces_without_material": 0,
+      "area": 0.41947,
+      "role": "subject",
+      "bbox_min": [-1.47, 1.25, 2.1],
+      "bbox_max": [-1.35, 1.51, 2.58],
+      "dimensions": [0.12, 0.26, 0.48],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.422, 0.799, 0.459, 0.901],
+        "cut_off": [],
+        "center": [0.441, 0.85],
+        "distance": 10.8806,
+        "occluded": 0.4453,
+        "occluded_by": [
+          "Book.012",
+          "Floating shelf.002"
+        ],
+        "seen": 0.2891,
+        "coverage": 0.0016
+      },
+      "support": {
+        "touching": [
+          "Floating shelf.002"
+        ],
+        "intersecting": [
+          "Floating shelf.002"
+        ],
+        "gap_below": 0.04,
+        "surface_below": "Floating shelf.002",
+        "floating": false
+      }
+    },
+    {
+      "name": "Book.012",
+      "type": "MESH",
+      "data": "Cube.026",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [-1.24, 1.38, 2.34],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, -1.24],
+        [0.0, 1.0, 0.0, 1.38],
+        [0.0, 0.0, 1.0, 2.34],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "3419079a31a988a9",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Brushed copper"
+      ],
+      "faces_without_material": 0,
+      "area": 0.35939,
+      "role": "subject",
+      "bbox_min": [-1.3, 1.25, 2.14],
+      "bbox_max": [-1.18, 1.51, 2.54],
+      "dimensions": [0.12, 0.26, 0.4],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.442, 0.801, 0.478, 0.889],
+        "cut_off": [],
+        "center": [0.46, 0.845],
+        "distance": 10.7814,
+        "occluded": 0.5156,
+        "occluded_by": [
+          "Book.013"
+        ],
+        "seen": 0.2031,
+        "coverage": 0.0023
+      },
+      "support": {
+        "touching": [
+          "Floating shelf.002"
+        ],
+        "intersecting": [
+          "Floating shelf.002"
+        ],
+        "gap_below": 0.0,
+        "surface_below": "Floating shelf.002",
+        "floating": false
+      }
+    },
+    {
+      "name": "Book.013",
+      "type": "MESH",
+      "data": "Cube.027",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [-1.07, 1.38, 2.34],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, -1.07],
+        [0.0, 1.0, 0.0, 1.38],
+        [0.0, 0.0, 1.0, 2.34],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "c565c979eee0b283",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Moss textile"
+      ],
+      "faces_without_material": 0,
+      "area": 0.41947,
+      "role": "subject",
+      "bbox_min": [-1.13, 1.25, 2.1],
+      "bbox_max": [-1.01, 1.51, 2.58],
+      "dimensions": [0.12, 0.26, 0.48],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.462, 0.788, 0.498, 0.893],
+        "cut_off": [],
+        "center": [0.48, 0.841],
+        "distance": 10.6839,
+        "occluded": 0.3672,
+        "occluded_by": [
+          "Book.014",
+          "Floating shelf.002"
+        ],
+        "seen": 0.3438,
+        "coverage": 0.002
+      },
+      "support": {
+        "touching": [
+          "Floating shelf.002"
+        ],
+        "intersecting": [
+          "Floating shelf.002"
+        ],
+        "gap_below": 0.04,
+        "surface_below": "Floating shelf.002",
+        "floating": false
+      }
+    },
+    {
+      "name": "Book.014",
+      "type": "MESH",
+      "data": "Cube.028",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [-0.9, 1.38, 2.34],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, -0.9],
+        [0.0, 1.0, 0.0, 1.38],
+        [0.0, 0.0, 1.0, 2.34],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 96,
+      "polygons": 98,
+      "mesh_hash": "3419079a31a988a9",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 188,
+      "instances": 1,
+      "materials": [
+        "Brushed copper"
+      ],
+      "faces_without_material": 0,
+      "area": 0.35939,
+      "role": "subject",
+      "bbox_min": [-0.96, 1.25, 2.14],
+      "bbox_max": [-0.84, 1.51, 2.54],
+      "dimensions": [0.12, 0.26, 0.4],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.482, 0.791, 0.518, 0.88],
+        "cut_off": [],
+        "center": [0.5, 0.836],
+        "distance": 10.5882,
+        "occluded": 0.0,
+        "occluded_by": [],
+        "seen": 0.5234,
+        "coverage": 0.0026
+      },
+      "support": {
+        "touching": [
+          "Floating shelf.002"
+        ],
+        "intersecting": [
+          "Floating shelf.002"
+        ],
+        "gap_below": 0.0,
+        "surface_below": "Floating shelf.002",
+        "floating": false
+      }
+    },
+    {
+      "name": "Side table base",
+      "type": "MESH",
+      "data": "Cylinder",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [1.05, 0.1, 0.42],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, 1.05],
+        [0.0, 1.0, 0.0, 0.1],
+        [0.0, 0.0, 1.0, 0.42],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 768,
+      "polygons": 674,
+      "mesh_hash": "1b19512da78cfc13",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 1532,
+      "instances": 1,
+      "materials": [
+        "Warm walnut"
+      ],
+      "faces_without_material": 0,
+      "area": 0.86128,
+      "role": "subject",
+      "bbox_min": [0.89, -0.06, 0.06],
+      "bbox_max": [1.21, 0.26, 0.78],
+      "dimensions": [0.32, 0.32, 0.72],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.614, 0.214, 0.671, 0.384],
+        "cut_off": [],
+        "center": [0.642, 0.299],
+        "distance": 9.3268,
+        "occluded": 0.4531,
+        "occluded_by": [
+          "Side table top",
+          "Walnut platform"
+        ],
+        "seen": 0.2578,
+        "coverage": 0.0052
+      },
+      "support": {
+        "touching": [
+          "Side table top",
+          "Walnut platform"
+        ],
+        "intersecting": [
+          "Side table top",
+          "Walnut platform"
+        ],
+        "gap_below": 0.06,
+        "surface_below": "Backdrop floor",
+        "floating": false
+      }
+    },
+    {
+      "name": "Side table top",
+      "type": "MESH",
+      "data": "Cylinder.001",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [1.05, 0.1, 0.81],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, 1.05],
+        [0.0, 1.0, 0.0, 0.1],
+        [0.0, 0.0, 1.0, 0.81],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 768,
+      "polygons": 674,
+      "mesh_hash": "2139081b14d091d5",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 1532,
+      "instances": 1,
+      "materials": [
+        "Warm walnut"
+      ],
+      "faces_without_material": 0,
+      "area": 1.55648,
+      "role": "subject",
+      "bbox_min": [0.58, -0.37, 0.77],
+      "bbox_max": [1.52, 0.57, 0.85],
+      "dimensions": [0.94, 0.94, 0.08],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.565, 0.318, 0.724, 0.428],
+        "cut_off": [],
+        "center": [0.644, 0.375],
+        "distance": 9.1416,
+        "occluded": 0.0,
+        "occluded_by": [],
+        "seen": 0.5156,
+        "coverage": 0.0143
+      },
+      "support": {
+        "touching": [
+          "Side table base"
+        ],
+        "intersecting": [
+          "Side table base"
+        ],
+        "gap_below": 0.65,
+        "surface_below": "Walnut platform",
+        "floating": false
+      }
+    },
+    {
+      "name": "Reading lamp stem",
+      "type": "MESH",
+      "data": "Cylinder.002",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [1.3, 1.05, 0.8],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, 1.3],
+        [0.0, 1.0, 0.0, 1.05],
+        [0.0, 0.0, 1.0, 0.8],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 768,
+      "polygons": 674,
+      "mesh_hash": "90178dfe0ea2b217",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 1532,
+      "instances": 1,
+      "materials": [
+        "Brushed copper"
+      ],
+      "faces_without_material": 0,
+      "area": 0.42975,
+      "role": "subject",
+      "bbox_min": [1.255, 1.005, 0.05],
+      "bbox_max": [1.345, 1.095, 1.55],
+      "dimensions": [0.09, 0.09, 1.5],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.74, 0.294, 0.77, 0.584],
+        "cut_off": [],
+        "center": [0.754, 0.435],
+        "distance": 9.8047,
+        "occluded": 0.2891,
+        "occluded_by": [
+          "Paper lamp",
+          "Walnut platform"
+        ],
+        "seen": 0.3047,
+        "coverage": 0.0029
+      },
+      "support": {
+        "touching": [
+          "Paper lamp",
+          "Walnut platform"
+        ],
+        "intersecting": [
+          "Paper lamp",
+          "Walnut platform"
+        ],
+        "gap_below": 0.05,
+        "surface_below": "Walnut platform",
+        "floating": false
+      }
+    },
+    {
+      "name": "Paper lamp",
+      "type": "MESH",
+      "data": "Sphere",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [1.3, 1.05, 1.65],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, 1.3],
+        [0.0, 1.0, 0.0, 1.05],
+        [0.0, 0.0, 1.0, 1.65],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 1,
+      "vertices": 1106,
+      "polygons": 1152,
+      "mesh_hash": "0e314a4b76ed750c",
+      "modifiers": [
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": true,
+      "triangles": 2208,
+      "instances": 1,
+      "materials": [
+        "Ivory ceramic"
+      ],
+      "faces_without_material": 0,
+      "area": 1.28221,
+      "role": "subject",
+      "bbox_min": [0.98, 0.73, 1.33],
+      "bbox_max": [1.62, 1.37, 1.97],
+      "dimensions": [0.64, 0.64, 0.64],
+      "view": {
+        "in_frame": 1.0,
+        "behind_camera": false,
+        "beyond_clip_end": 0.0,
+        "screen_bbox": [0.711, 0.532, 0.817, 0.672],
+        "cut_off": [],
+        "center": [0.764, 0.602],
+        "distance": 9.4718,
+        "occluded": 0.0,
+        "occluded_by": [],
+        "seen": 0.5547,
+        "coverage": 0.0104
+      },
+      "support": {
+        "touching": [
+          "Reading lamp stem"
+        ],
+        "intersecting": [
+          "Reading lamp stem"
+        ],
+        "gap_below": 1.2127,
+        "surface_below": "Walnut platform",
+        "floating": false
+      }
+    },
+    {
+      "name": "Editorial camera",
+      "type": "CAMERA",
+      "data": "Editorial camera",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [5.0, -7.0, 5.0],
+      "rotation_euler": [1.1535, -0.0, 0.6136],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [0.81761, -0.23336, 0.52637, 5.0],
+        [0.57578, 0.33138, -0.74744, -7.0],
+        [0.0, 0.91418, 0.4053, 5.0],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 0.999999998,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 0,
+      "vertices": 0,
+      "polygons": 0
+    },
+    {
+      "name": "Large warm key",
+      "type": "LIGHT",
+      "data": "Large warm key",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [-3.0, -4.0, 6.0],
+      "rotation_euler": [0.8086, -0.0, -0.6317],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [0.80703, 0.40776, -0.42712, -3.0],
+        [-0.59051, 0.55727, -0.58374, -4.0],
+        [0.0, 0.72332, 0.69052, 6.0],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.000000022,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 0,
+      "vertices": 0,
+      "polygons": 0
+    },
+    {
+      "name": "Cool fill",
+      "type": "LIGHT",
+      "data": "Cool fill",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [4.0, -1.0, 3.0],
+      "rotation_euler": [1.1513, -0.0, 1.3024],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [0.26516, -0.3927, 0.88061, 4.0],
+        [0.96421, 0.10799, -0.24217, -1.0],
+        [0.0, 0.9133, 0.40728, 3.0],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 0.999999976,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 0,
+      "vertices": 0,
+      "polygons": 0
+    },
+    {
+      "name": "Edge separation",
+      "type": "LIGHT",
+      "data": "Edge separation",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [1.0, 4.0, 9.0],
+      "rotation_euler": [0.4739, -0.0, 2.8906],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [-0.96866, -0.221, 0.11335, 1.0],
+        [0.24838, -0.86191, 0.44206, 4.0],
+        [0.0, 0.45636, 0.88979, 9.0],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.000000022,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 0,
+      "vertices": 0,
+      "polygons": 0
+    }
+  ],
+  "lights": [
+    {
+      "name": "Large warm key",
+      "type": "AREA",
+      "energy": 900.0,
+      "exposure": 0.0,
+      "color": [1.0, 0.85, 0.65],
+      "use_temperature": false,
+      "render_visible": true,
+      "hidden_by": [],
+      "location": [-3.0, -4.0, 6.0],
+      "direction": [0.4271, 0.5837, -0.6905],
+      "cast_shadows": true,
+      "shape": "DISK",
+      "size": 4.0,
+      "spread_deg": 180.0,
+      "normalize": true,
+      "distance_to_subject": 7.0487,
+      "angle_off_axis_deg": 2.61,
+      "angle_to_camera_deg": 59.48,
+      "aimed_at_subject": true,
+      "reaches_subject": 0.6809,
+      "facing_but_blocked": 0.1297,
+      "blocked_by": [
+        "Side wall",
+        "Chair seat",
+        "Floating shelf.001"
+      ],
+      "irradiance": 2.037
+    },
+    {
+      "name": "Cool fill",
+      "type": "AREA",
+      "energy": 400.0,
+      "exposure": 0.0,
+      "color": [0.65, 0.78, 1.0],
+      "use_temperature": false,
+      "render_visible": true,
+      "hidden_by": [],
+      "location": [4.0, -1.0, 3.0],
+      "direction": [-0.8806, 0.2422, -0.4073],
+      "cast_shadows": true,
+      "shape": "DISK",
+      "size": 3.0,
+      "spread_deg": 180.0,
+      "normalize": true,
+      "distance_to_subject": 4.6096,
+      "angle_off_axis_deg": 3.94,
+      "angle_to_camera_deg": 34.13,
+      "aimed_at_subject": true,
+      "reaches_subject": 0.8346,
+      "facing_but_blocked": 0.0841,
+      "blocked_by": [
+        "Side table top",
+        "Chair seat",
+        "Floating shelf.001"
+      ],
+      "irradiance": 1.9185
+    },
+    {
+      "name": "Edge separation",
+      "type": "AREA",
+      "energy": 1000.0,
+      "exposure": 0.0,
+      "color": [1.0, 0.67, 0.4],
+      "use_temperature": false,
+      "render_visible": true,
+      "hidden_by": [],
+      "location": [1.0, 4.0, 9.0],
+      "direction": [-0.1133, -0.4421, -0.8898],
+      "cast_shadows": true,
+      "shape": "DISK",
+      "size": 2.0,
+      "spread_deg": 180.0,
+      "normalize": true,
+      "distance_to_subject": 8.5679,
+      "angle_off_axis_deg": 1.3,
+      "angle_to_camera_deg": 85.16,
+      "aimed_at_subject": true,
+      "reaches_subject": 0.2699,
+      "facing_but_blocked": 0.3064,
+      "blocked_by": [
+        "Floating shelf.002",
+        "Back wall",
+        "Floating shelf.001"
+      ],
+      "irradiance": 0.5786
+    }
+  ],
+  "world": {
+    "name": "Low contrast studio world",
+    "strength": 0.25,
+    "color": [0.12, 0.14, 0.18],
+    "textured": false,
+    "radiance": 0.0347,
+    "film_transparent": false,
+    "textures": []
+  },
+  "materials": [
+    {
+      "name": "Brushed copper",
+      "shaders": [
+        "BSDF_PRINCIPLED"
+      ],
+      "emission": null,
+      "see_through": false,
+      "images": [],
+      "base_color": [0.63, 0.23, 0.1],
+      "metallic": 0.8,
+      "roughness": 0.27,
+      "transmission": 0.0,
+      "alpha": 1.0,
+      "users": [
+        "Book",
+        "Book.002",
+        "Book.004",
+        "Book.005",
+        "Book.007",
+        "Book.009",
+        "Book.010",
+        "Book.012",
+        "Book.014",
+        "Reading lamp stem"
+      ]
+    },
+    {
+      "name": "Charcoal stone",
+      "shaders": [
+        "BSDF_PRINCIPLED"
+      ],
+      "emission": null,
+      "see_through": false,
+      "images": [],
+      "base_color": [0.055, 0.065, 0.075],
+      "metallic": 0.0,
+      "roughness": 0.65,
+      "transmission": 0.0,
+      "alpha": 1.0,
+      "users": [
+        "Backdrop floor"
+      ]
+    },
+    {
+      "name": "Ivory ceramic",
+      "shaders": [
+        "BSDF_PRINCIPLED"
+      ],
+      "emission": null,
+      "see_through": false,
+      "images": [],
+      "base_color": [0.68, 0.57, 0.4],
+      "metallic": 0.0,
+      "roughness": 0.24,
+      "transmission": 0.0,
+      "alpha": 1.0,
+      "users": [
+        "Back wall",
+        "Paper lamp",
+        "Side wall"
+      ]
+    },
+    {
+      "name": "Moss textile",
+      "shaders": [
+        "BSDF_PRINCIPLED"
+      ],
+      "emission": null,
+      "see_through": false,
+      "images": [],
+      "base_color": [0.12, 0.22, 0.11],
+      "metallic": 0.0,
+      "roughness": 0.9,
+      "transmission": 0.0,
+      "alpha": 1.0,
+      "users": [
+        "Book.001",
+        "Book.003",
+        "Book.006",
+        "Book.008",
+        "Book.011",
+        "Book.013",
+        "Chair back",
+        "Chair seat"
+      ]
+    },
+    {
+      "name": "Warm walnut",
+      "shaders": [
+        "BSDF_PRINCIPLED"
+      ],
+      "emission": null,
+      "see_through": false,
+      "images": [],
+      "base_color": [0.17, 0.07, 0.025],
+      "metallic": 0.0,
+      "roughness": 0.42,
+      "transmission": 0.0,
+      "alpha": 1.0,
+      "users": [
+        "Chair leg",
+        "Chair leg.001",
+        "Chair leg.002",
+        "Chair leg.003",
+        "Floating shelf",
+        "Floating shelf.001",
+        "Floating shelf.002",
+        "Side table base",
+        "Side table top",
+        "Walnut platform"
+      ]
+    }
+  ],
+  "illumination": {
+    "lights": 3,
+    "render_visible_lights": 3,
+    "lights_reaching_subject": 3,
+    "emissive_materials": [],
+    "unused_emissive_materials": []
+  },
+  "contacts": {
+    "tolerance": 0.005,
+    "floating": []
+  },
+  "animation": {
+    "frame_start": 1,
+    "frame_end": 250,
+    "frame_current": 1,
+    "fps": 24.0,
+    "objects": [],
+    "python_drivers_not_evaluated": 0
+  },
+  "missing_images": [],
+  "inspector": {
+    "samples_per_object": 256,
+    "raycast": true,
+    "raycast_truncated": false,
+    "seconds": 0.52
+  }
+}

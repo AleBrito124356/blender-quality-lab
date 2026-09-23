@@ -117,7 +117,8 @@ def build(recipe, output, render=False):
     copper = material("Brushed copper", (0.63, 0.23, 0.10), metallic=0.8, roughness=0.27)
     walnut = material("Warm walnut", (0.17, 0.07, 0.025), roughness=0.42)
     green = material("Moss textile", (0.12, 0.22, 0.11), roughness=0.9)
-    cube("Backdrop floor", (0, 0, -0.09), (200, 200, 0.15), stone, 0)
+    # Top face at z = 0 so plinths and platforms rest on it (it used to sit 1.5 cm below them).
+    cube("Backdrop floor", (0, 0, -0.075), (200, 200, 0.15), stone, 0)
     target, camera = (0, 0, 1.35), (5, -7, 4)
     if recipe == "product":
         cylinder("Stone plinth", (0, 0, 0.23), 1.12, 0.46, stone)
@@ -157,11 +158,12 @@ def build(recipe, output, render=False):
             for y in [-0.75, 0.0]:
                 cube("Chair leg", (x, y, 0.32), (0.1, 0.1, 0.55), walnut, 0.015)
         for z in [0.7, 1.4, 2.1]:
-            cube("Floating shelf", (-1.0, 1.35, z), (1.5, 0.48, 0.08), walnut, 0.01)
+            # Back face flush with the back wall (y = 1.64): wall-mounted, not hovering 5 cm off it.
+            cube("Floating shelf", (-1.0, 1.40, z), (1.5, 0.48, 0.08), walnut, 0.01)
             for index in range(5):
                 cube(
                     "Book",
-                    (-1.58 + index * 0.17, 1.33, z + 0.24),
+                    (-1.58 + index * 0.17, 1.38, z + 0.24),
                     (0.12, 0.26, 0.4 + (index % 2) * 0.08),
                     green if index % 2 else copper,
                     0.005,
@@ -182,7 +184,10 @@ def build(recipe, output, render=False):
     scene.camera = camera_obj
     area("Large warm key", (-3, -4, 6), 900, 4, (1.0, 0.85, 0.65), target)
     area("Cool fill", (4, -1, 3), 400, 3, (0.65, 0.78, 1.0), target)
-    area("Edge separation", (1, 4, 5), 1000, 2, (1.0, 0.67, 0.40), target)
+    # In the interior the back wall (3.2 m) stands between the edge light and the room, so it is
+    # raised until it clears the wall top; elsewhere it keeps its original position.
+    edge = (1, 4, 9) if recipe == "interior" else (1, 4, 5)
+    area("Edge separation", edge, 1000, 2, (1.0, 0.67, 0.40), target)
     output.mkdir(parents=True, exist_ok=True)
     purge_orphans()
     scene.render.filepath = str((output / (recipe + ".png")).resolve())

@@ -56,6 +56,37 @@ def add_blender_options(parser):
     parser.add_argument("--verbose", action="store_true", help="print Blender's own log")
 
 
+def add_inspection_options(parser):
+    parser.add_argument(
+        "--subject",
+        action="append",
+        default=[],
+        metavar="NAME",
+        help="subject object name or glob (repeatable)",
+    )
+    parser.add_argument(
+        "--subject-collection",
+        action="append",
+        default=[],
+        metavar="NAME",
+        help="collection holding the subject",
+    )
+    parser.add_argument("--scene-name", metavar="NAME", help="inspect this scene instead of the active one")
+    parser.add_argument(
+        "--grid", type=int, default=64, help="columns of the camera coverage grid (default 64)"
+    )
+    parser.add_argument(
+        "--contact-scale",
+        type=float,
+        default=1.0,
+        help="multiplier for the 5 mm contact tolerance (default 1)",
+    )
+    parser.add_argument(
+        "--preview-percentage", type=int, default=25, help="preview size in percent (default 25)"
+    )
+    parser.add_argument("--preview-samples", type=int, default=16, help="preview render samples (default 16)")
+
+
 def cmd_build(args):
     blender = find_blender(args.blender)
     scene_path = args.output / (args.recipe + ".blend")
@@ -79,23 +110,53 @@ def cmd_build(args):
     return 0
 
 
-def cmd_inspect(args):
+def inspection_args(args):
+    """Options forwarded to scripts/inspect_scene.py."""
+    extra = []
+    for name in args.subject:
+        extra += ["--subject", name]
+    for name in args.subject_collection:
+        extra += ["--subject-collection", name]
+    if args.scene_name:
+        extra += ["--scene", args.scene_name]
+    extra += ["--grid", str(args.grid), "--contact-scale", str(args.contact_scale)]
+    return extra
+
+
+def run_inspection(args, output, preview=None):
     blender = find_blender(args.blender)
     if not args.scene.is_file():
         raise UsageError(f"Scene file does not exist: {args.scene}")
-    args.output.parent.mkdir(parents=True, exist_ok=True)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    script_args = ["--output", output.resolve(), *inspection_args(args)]
+    if preview is not None:
+        script_args += [
+            "--preview",
+            preview.resolve(),
+            "--preview-percentage",
+            str(args.preview_percentage),
+            "--preview-samples",
+            str(args.preview_samples),
+        ]
     run = run_blender(
         blender.path,
         SCRIPTS / "inspect_scene.py",
-        ["--output", args.output.resolve()],
+        script_args,
         blend_file=args.scene.resolve(),
         timeout=args.timeout,
         verbose=args.verbose,
     )
-    if not args.output.is_file():
+    if not output.is_file():
         raise BlenderError("Blender finished but did not write the inspection JSON")
-    print(f"inspection: {args.output}")
     print(f"blender: {blender.path} ({run.elapsed:.1f} s)", file=sys.stderr)
+    return output
+
+
+def cmd_inspect(args):
+    run_inspection(args, args.output, args.preview)
+    print(f"inspection: {args.output}")
+    if args.preview:
+        print(f"preview: {args.preview}")
     return 0
 
 
@@ -125,7 +186,7 @@ def cmd_doctor(args):
 
 
 def cmd_score(args):
-    report = technical_report(read_json(args.inspection))
+    report = technical_report(read_json(args.inspection), strict_contact=args.strict_contact)
     emit_json(report)
     if args.strict and report["passed"] != report["total"]:
         return 1
@@ -179,6 +240,8 @@ def build_parser():
     inspect = sub.add_parser("inspect", help="collect scene facts from a .blend without running its scripts")
     inspect.add_argument("scene", type=Path)
     inspect.add_argument("--output", type=Path, required=True, help="inspection JSON to write")
+    inspect.add_argument("--preview", type=Path, help="also render a small preview PNG here (final engine)")
+    add_inspection_options(inspect)
     add_blender_options(inspect)
     inspect.set_defaults(handler=cmd_inspect)
 
@@ -190,6 +253,9 @@ def build_parser():
     score = sub.add_parser("score", help="technical gates for an inspection JSON")
     score.add_argument("inspection", type=Path)
     score.add_argument("--strict", action="store_true", help="exit 1 if any gate fails")
+    score.add_argument(
+        "--strict-contact", action="store_true", help="make floating objects a gate instead of a warning"
+    )
     score.set_defaults(handler=cmd_score)
 
     review = sub.add_parser("review", help="validate a filled rubric and normalize the human score")

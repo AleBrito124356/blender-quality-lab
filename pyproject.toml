@@ -23,6 +23,9 @@ packages = ["src/blender_quality"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# Blender integration tests are opt-in: `python -m pytest -m blender` (skipped if Blender is absent).
+addopts = ["-m", "not blender"]
+markers = ["blender: needs a real Blender executable (builds, sabotages and inspects scenes)"]
 
 [tool.ruff]
 line-length = 110

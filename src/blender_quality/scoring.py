@@ -1,5 +1,7 @@
 import math
 
+from .gates import technical_report_v2
+
 RUBRIC = {
     "brief": "Does the result satisfy the subject, style and deliverable?",
     "composition": "Is the silhouette readable, framing intentional and hierarchy clear?",
@@ -34,9 +36,13 @@ def _validate_v1(scene):
                 raise ValueError(f"inspection objects[{index}] is missing '{key}'")
 
 
-def technical_report(scene):
+def technical_report(scene, strict_contact=False):
+    """Gates for an inspection. Schema 1 reports are scored exactly as before; schema 2 adds
+    camera, visibility, contact and lighting gates plus advisory warnings (see gates.py)."""
     if not isinstance(scene, dict):
         raise ValueError("inspection JSON must be an object")
+    if scene.get("schema_version") == 2:
+        return technical_report_v2(scene, strict_contact)
     if scene.get("schema_version") != 1:
         raise ValueError(f"Unsupported inspection schema {scene.get('schema_version')!r}")
     _validate_v1(scene)
