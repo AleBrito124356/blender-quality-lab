@@ -8,6 +8,15 @@ from pathlib import Path
 
 import bpy
 
+# Blender 5.0 deprecates `use_nodes` (materials and worlds always have node trees).
+ALWAYS_NODES = bpy.app.version >= (5, 0)
+
+
+def uses_nodes(datablock):
+    if ALWAYS_NODES:
+        return datablock.node_tree is not None
+    return datablock.use_nodes
+
 
 def inspect_scene():
     scene = bpy.context.scene
@@ -32,7 +41,7 @@ def inspect_scene():
                 missing.append(image.name)
     world_light = False
     if scene.world:
-        if scene.world.use_nodes:
+        if uses_nodes(scene.world):
             world_light = any(
                 node.type == "BACKGROUND"
                 and node.inputs["Strength"].default_value > 0
@@ -43,7 +52,7 @@ def inspect_scene():
             world_light = max(scene.world.color) > 0
     emitting = False
     for material in bpy.data.materials:
-        if material.use_nodes:
+        if uses_nodes(material):
             for node in material.node_tree.nodes:
                 if node.type == "EMISSION" and node.inputs["Strength"].default_value > 0:
                     emitting = True

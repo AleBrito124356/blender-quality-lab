@@ -10,7 +10,7 @@ This image is from the deterministic **abstract** recipe rendered with Blender, 
 
 ## Quick start
 
-Python 3.11+ and Blender 4.5+ are required for building/inspecting scenes. Scoring JSON reports only requires Python.
+Python 3.11+ and Blender 4.5+ are required for building/inspecting scenes (verified with 4.5 LTS and 5.2.1 LTS). Scoring JSON reports only requires Python.
 
 ```sh
 git clone https://github.com/AleBrito124356/blender-quality-lab.git
@@ -19,12 +19,15 @@ python -m venv .venv
 # Windows: .venv\Scripts\activate
 # macOS/Linux: source .venv/bin/activate
 python -m pip install -e .
-blender-quality build abstract --blender /path/to/blender --output output/abstract --render
-blender-quality inspect output/abstract/abstract.blend --blender /path/to/blender --output output/inspection.json
+blender-quality doctor                      # which Blender will be used, and its version
+blender-quality build abstract --output output/abstract --render
+blender-quality inspect output/abstract/abstract.blend --output output/inspection.json
 blender-quality score output/inspection.json --strict
 ```
 
-On Windows, use a quoted path such as `--blender "C:\Program Files\Blender Foundation\Blender 4.5\blender.exe"`. Omit `--blender` if it is in PATH. Renders use Cycles CPU at 960 × 720, 32 samples and denoising. The CLI allows up to 10 minutes per Blender process. A failed build may leave partial output; inspect it and select a new output directory before retrying.
+Blender is found in this order: `--blender PATH`, the `BLENDER` environment variable, `blender` on PATH, then the standard install folders (`C:\Program Files\Blender Foundation\Blender *\blender.exe` on Windows, `/Applications/Blender*.app` on macOS, `/usr/bin`, `/usr/local/bin`, `/snap/bin` and `/opt/blender*` on Linux), preferring the highest version. `--blender` also accepts an install folder.
+
+Every Blender process is started with `--background --factory-startup --disable-autoexec`: your add-ons, startup file and preferences are not loaded, and Python embedded in a `.blend` (registered text blocks, scripted drivers) never runs. `BLENDER_USER_SCRIPTS`/`BLENDER_SYSTEM_SCRIPTS`-style overrides are removed from its environment. `--timeout SECONDS` (default 600) stops a stuck process. Failures print one error line plus the last lines of Blender's output, never a Python traceback; exit code 1 means Blender or a gate failed, 2 means the input was invalid. Renders use Cycles CPU at 960 × 720, 32 samples and denoising. A failed build may leave partial output; inspect it and select a new output directory before retrying.
 
 ## Three recipes, ready to run
 
@@ -34,7 +37,7 @@ On Windows, use a quoted path such as `--blender "C:\Program Files\Blender Found
 | `abstract` | Interlocking copper orbits | Metallic response, readable silhouette, contact shadows, plinth composition |
 | `interior` | Isometric reading nook | Believable scale, furniture, shelves, books, coordinated materials |
 
-Each recipe creates a new scene with an active camera, named objects/materials, an AgX view transform and three area lights. The CLI starts a fresh Blender process. It refuses to overwrite an existing recipe `.blend`. The recipes are authored procedural baselines, not model-generated results. They are intentionally small and easy to adapt; the material helpers do not simulate physically accurate wood grain or textile fibers.
+Each recipe creates a new scene with an active camera, named objects/materials, an AgX view transform and three area lights. The saved `.blend` holds only that scene: the factory scene with its default Cube, Camera, Light and Material, and every unused datablock, are removed before saving. The CLI starts a fresh Blender process. It refuses to overwrite an existing recipe `.blend`. The recipes are authored procedural baselines, not model-generated results. They are intentionally small and easy to adapt; the material helpers do not simulate physically accurate wood grain or textile fibers.
 
 ## Evaluate a model or harness change
 
