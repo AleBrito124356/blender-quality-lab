@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "status": "completed",
+  "model": "none (copper-orbits recipe + scripted defect 'no_lights_unused_emission')",
+  "steps": 0,
+  "total_tokens": 0,
+  "elapsed_seconds": 4.79
+}

@@ -4,6 +4,9 @@ import sys
 from pathlib import Path
 
 from . import __version__
+from . import diff as scene_diff
+from . import summarize as run_summary
+from .briefs import brief_text, get_brief, load_briefs
 from .describe import describe, to_markdown
 from .image_metrics import measure_file
 from .runner import (
@@ -253,7 +256,55 @@ def cmd_check(args):
     return 0
 
 
+def cmd_briefs(args):
+    if args.action == "list":
+        briefs = load_briefs(args.file)
+        if args.json:
+            emit_json(briefs)
+        else:
+            for brief in briefs:
+                first = brief["prompt"].split(". ")[0]
+                print(f"{brief['id']:<22} {brief['difficulty']:<7} {first}")
+    elif args.action == "validate":
+        briefs = load_briefs(args.file)
+        print(f"{args.file or 'packaged briefs'}: {len(briefs)} valid briefs")
+    else:
+        if not args.brief_id:
+            raise UsageError("briefs show needs a brief id; see `blender-quality briefs list`")
+        brief = get_brief(args.brief_id, args.file)
+        if args.json:
+            emit_json(brief)
+        elif args.prompt_only:
+            print(brief["prompt"])
+        else:
+            sys.stdout.write(brief_text(brief))
+    return 0
+
+
+def cmd_diff(args):
+    original = scene_diff.original_path(args.original) if args.original else None
+    result = scene_diff.diff_inspections(read_json(args.before), read_json(args.after), original)
+    if args.format == "md":
+        sys.stdout.write(scene_diff.to_markdown(result))
+    else:
+        emit_json(result)
+    return 1 if args.strict and not result["preserve_and_relight"]["passed"] else 0
+
+
+def cmd_summarize(args):
+    summary = run_summary.summarize(args.runs)
+    if args.format == "md":
+        sys.stdout.write(run_summary.to_markdown(summary))
+    else:
+        emit_json(summary)
+    return 0
+
+
 def cmd_compare(args):
+    print("blender-quality: note: `compare` is deprecated; use `summarize RUNS_DIR`", file=sys.stderr)
+    if len(args.reports) == 1 and args.reports[0].is_dir():
+        emit_json(run_summary.summarize(args.reports[0]))
+        return 0
     rows = []
     for path in args.reports:
         report = read_json(path)
@@ -335,7 +386,30 @@ def build_parser():
     rubric = sub.add_parser("rubric", help="print an empty human rating template")
     rubric.set_defaults(handler=cmd_rubric)
 
-    compare = sub.add_parser("compare", help="list scored reports side by side (no combined ranking)")
+    briefs = sub.add_parser("briefs", help="list, show or validate the controlled briefs")
+    briefs.add_argument("action", choices=["list", "show", "validate"])
+    briefs.add_argument("brief_id", nargs="?", help="brief id for `show`")
+    briefs.add_argument(
+        "--prompt-only", action="store_true", help="print only the prompt (for piping into a harness)"
+    )
+    briefs.add_argument("--json", action="store_true")
+    briefs.add_argument("--file", type=Path, help="use this briefs JSON instead of the packaged one")
+    briefs.set_defaults(handler=cmd_briefs)
+
+    diff = sub.add_parser("diff", help="what changed between two inspections; checks preserve-and-relight")
+    diff.add_argument("before", type=Path, help="inspection of the input scene")
+    diff.add_argument("after", type=Path, help="inspection of the edited copy")
+    diff.add_argument("--original", type=Path, help="the input .blend, to prove it was not overwritten")
+    diff.add_argument("--format", choices=["json", "md"], default="json")
+    diff.add_argument("--strict", action="store_true", help="exit 1 if the preserve-and-relight check fails")
+    diff.set_defaults(handler=cmd_diff)
+
+    summarize = sub.add_parser("summarize", help="aggregate RUNS_DIR/<config>/<brief>/<run>/ without ranking")
+    summarize.add_argument("runs", type=Path)
+    summarize.add_argument("--format", choices=["json", "md"], default="md")
+    summarize.set_defaults(handler=cmd_summarize)
+
+    compare = sub.add_parser("compare", help="deprecated: use summarize (still lists scored reports)")
     compare.add_argument("reports", nargs="+", type=Path)
     compare.set_defaults(handler=cmd_compare)
     return parser
@@ -348,6 +422,8 @@ def print_error(message, tail=()):
 
 
 def main(argv=None):
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(errors="replace")  # object names can hold characters the console lacks
     parser = build_parser()
     args = parser.parse_args(argv)
     try:

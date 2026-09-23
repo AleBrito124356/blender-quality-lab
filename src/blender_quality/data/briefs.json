@@ -10,7 +10,9 @@
         "Ceramic and stone are visually distinct",
         "Subject grounded by contact shadows",
         "Intentional negative space"
-      ]
+      ],
+      "strict_contact": true,
+      "subject_collection": "ASTRA"
     },
     {
       "id": "reading-nook",
@@ -21,7 +23,9 @@
         "At least four meaningful materials",
         "Light direction is readable",
         "No obvious floating furniture"
-      ]
+      ],
+      "strict_contact": true,
+      "subject_collection": "ASTRA"
     },
     {
       "id": "machined-knob",
@@ -32,7 +36,8 @@
         "Panel and knob separate cleanly",
         "Edges catch controlled highlights",
         "No obvious coplanar flicker"
-      ]
+      ],
+      "subject_collection": "ASTRA"
     },
     {
       "id": "tiny-greenhouse",
@@ -54,7 +59,8 @@
         "Material looks metallic",
         "Shadow grounds the sculpture",
         "No severe clipping in frame"
-      ]
+      ],
+      "strict_contact": true
     },
     {
       "id": "preserve-and-relight",
@@ -66,7 +72,8 @@
         "Camera purposefully improved",
         "No overwrite of input file",
         "Changes accurately reported"
-      ]
+      ],
+      "diff": "preserve-and-relight"
     }
   ]
 }
