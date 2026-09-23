@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "blender-quality-lab"
-version = "0.1.0"
-description = "Reproducible Blender scene recipes, technical audits and honest human quality evaluation."
+version = "0.2.0"
+description = "Blender scene recipes, vision-free scene inspection with technical gates and fixes, and honest evaluation tooling."
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"

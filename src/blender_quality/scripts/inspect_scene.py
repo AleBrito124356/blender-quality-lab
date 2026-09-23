@@ -1,4 +1,4 @@
-"""Run inside Blender 4.2+ (verified on 5.2 LTS). Collect scene facts; never save the .blend.
+"""Run inside Blender 4.5+ (verified on 5.2 LTS). Collect scene facts; never save the .blend.
 
 `blender-quality inspect` starts Blender with --background --factory-startup --disable-autoexec and
 runs this script, which writes inspection schema v2. The facts are computed from geometry, not from
