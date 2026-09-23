@@ -60,7 +60,7 @@ The facts come from geometry, not pixels, so a model or reviewer without vision 
 - **Lighting.** For each light: whether it is aimed at the subject, which share of the camera-visible subject it actually reaches after shadow rays, what blocks it, and an approximate irradiance. From these come key, fill and the key-to-fill ratio. The world's radiance counts too, and so does emission, but only from materials on visible geometry.
 - **Materials.** Shaders reachable from the active output, base color, metallic, roughness, transmission and alpha, used images, emission.
 - **Animation.** Keys are read through the Blender 5 layered-action API (`channelbag(slot).fcurves`, with the legacy `action.fcurves` fallback), including NLA. It reports key ranges against the frame range, non-finite keys, Python drivers that were not evaluated, and motion sampled over the range: path length, speed, jumps, and whether the subject stays in frame.
-- **Also recorded:** the camera (lens, FOV, clip range, depth of field), world, missing images (and whether they are used), units, other scenes, and the file's SHA-256.
+- **Also recorded:** the camera (lens, FOV, clip range, depth of field), world, missing images (and whether they are used), units, other scenes (`--scene-name` inspects one of them instead of the active scene), and the file's SHA-256.
 
 `inspect --preview preview.png` also renders a small final-engine preview (25% size, 16 samples by default) so exposure can be measured. A scene that cannot render (no camera, engine error) still gets its inspection, and the preview records why it was skipped.
 

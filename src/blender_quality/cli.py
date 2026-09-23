@@ -161,7 +161,8 @@ def cmd_inspect(args):
     run_inspection(args, args.output, args.preview)
     print(f"inspection: {args.output}")
     if args.preview:
-        print(f"preview: {args.preview}")
+        skipped = (read_json(args.output).get("preview") or {}).get("skipped")
+        print(f"preview: skipped ({skipped})" if skipped else f"preview: {args.preview}")
     return 0
 
 
