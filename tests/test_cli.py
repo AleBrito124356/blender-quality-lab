@@ -1,27 +1,37 @@
 import json
+import shutil
 import subprocess
 import sys
+from pathlib import Path
 
 import pytest
 
 from blender_quality import cli
 from blender_quality.scoring import RUBRIC
 
+FIXTURES = Path(__file__).parent / "fixtures"
+
 
 class FakeBlender:
     """Records subprocess.run calls and writes the output a real script would write."""
 
-    def __init__(self, returncode=0, stdout="", stderr=""):
+    def __init__(self, returncode=0, stdout="", stderr="", inspection=None, preview=None):
         self.calls = []
         self.returncode, self.stdout, self.stderr = returncode, stdout, stderr
+        self.inspection, self.preview = inspection, preview
 
     def __call__(self, command, **kwargs):
         self.calls.append((command, kwargs))
         if self.returncode == 0 and "--" in command:
             script_args = command[command.index("--") + 1 :]
             if "--output" in script_args and "inspect_scene.py" in command[command.index("--python") + 1]:
-                with open(script_args[script_args.index("--output") + 1], "w", encoding="utf-8") as handle:
-                    handle.write("{}")
+                output = script_args[script_args.index("--output") + 1]
+                if self.inspection:
+                    shutil.copyfile(self.inspection, output)
+                else:
+                    Path(output).write_text("{}", encoding="utf-8")
+                if "--preview" in script_args and self.preview:
+                    shutil.copyfile(self.preview, script_args[script_args.index("--preview") + 1])
         return subprocess.CompletedProcess(command, self.returncode, self.stdout, self.stderr)
 
 
@@ -186,3 +196,80 @@ def test_doctor_without_blender_exits_1(monkeypatch, capsys):
     code, out, _ = run_cli(capsys, "doctor")
     assert code == 1
     assert "not found" in out
+
+
+def test_measure_reports_and_strict_fails_on_warnings(capsys):
+    black = FIXTURES / "renders" / "abstract-no_lights_unused_emission-preview.png"
+    code, out, _ = run_cli(capsys, "measure", black)
+    metrics = json.loads(out)
+    assert code == 0 and metrics["warnings"][0]["id"] == "black_frame"
+    assert run_cli(capsys, "measure", black, "--strict")[0] == 1
+    assert run_cli(capsys, "measure", FIXTURES / "renders" / "abstract-preview.png", "--strict")[0] == 0
+
+
+def test_measure_rejects_non_png_cleanly(capsys, tmp_path):
+    fake = tmp_path / "x.png"
+    fake.write_bytes(b"GIF89a....")
+    code, _, err = run_cli(capsys, "measure", fake)
+    assert_clean_error(err, code, 2, "not a PNG")
+
+
+def test_describe_markdown_and_json(capsys):
+    inspection = FIXTURES / "inspections" / "abstract-camera_away.json"
+    code, out, _ = run_cli(capsys, "describe", inspection)
+    assert code == 0 and out.startswith("# Scene report: QualityLab_abstract")
+    assert "cam.rotation_euler" in out
+    code, out, _ = run_cli(
+        capsys,
+        "describe",
+        inspection,
+        "--format",
+        "json",
+        "--image",
+        FIXTURES / "renders" / "abstract-preview.png",
+    )
+    report = json.loads(out)
+    assert report["fixes"][0]["id"] == "subject_in_frame"
+    assert report["exposure"]["luminance"]["mean"] > 0.2
+
+
+def test_describe_rejects_v1(capsys, tmp_path):
+    path = tmp_path / "v1.json"
+    path.write_text(json.dumps({"schema_version": 1}), encoding="utf-8")
+    code, _, err = run_cli(capsys, "describe", path)
+    assert_clean_error(err, code, 2, "schema_version 2")
+
+
+def test_check_runs_the_whole_loop(monkeypatch, capsys, tmp_path, fake_exe):
+    fake = FakeBlender(
+        inspection=FIXTURES / "inspections" / "abstract-no_lights_unused_emission.json",
+        preview=FIXTURES / "renders" / "abstract-no_lights_unused_emission-preview.png",
+    )
+    monkeypatch.setattr(subprocess, "run", fake)
+    scene = tmp_path / "scene.blend"
+    scene.write_bytes(b"BLENDER")
+    code, out, _ = run_cli(capsys, "check", scene, "--blender", fake_exe, "--strict", "--subject", "Copper*")
+    command = fake.calls[0][0]
+    assert code == 1
+    assert "--preview" in command and "--disable-autoexec" in command
+    assert command[command.index("--subject") + 1] == "Copper*"
+    assert "Nothing lights the subject" in out and "Fix the failed gates first" in out
+    folder = tmp_path / "scene.quality"
+    assert {p.name for p in folder.iterdir()} == {
+        "inspection.json",
+        "preview.png",
+        "technical.json",
+        "report.md",
+        "report.json",
+    }
+    code, _, _ = run_cli(
+        capsys, "check", scene, "--blender", fake_exe, "--no-preview", "--output-dir", tmp_path / "o"
+    )
+    assert code == 0
+    assert "--preview" not in fake.calls[1][0]
+
+
+def test_score_strict_contact(capsys):
+    floating = FIXTURES / "inspections" / "abstract-floating.json"
+    assert run_cli(capsys, "score", floating, "--strict")[0] == 0
+    assert run_cli(capsys, "score", floating, "--strict", "--strict-contact")[0] == 1

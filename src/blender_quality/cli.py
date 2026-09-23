@@ -4,6 +4,8 @@ import sys
 from pathlib import Path
 
 from . import __version__
+from .describe import describe, to_markdown
+from .image_metrics import measure_file
 from .runner import (
     DEFAULT_TIMEOUT,
     BlenderError,
@@ -211,11 +213,51 @@ def cmd_rubric(args):
     return 0
 
 
+def cmd_measure(args):
+    metrics = measure_file(args.image, grid=args.grid)
+    emit_json(metrics)
+    return 1 if args.strict and metrics.get("warnings") else 0
+
+
+def write_report(report, fmt):
+    if fmt == "json":
+        emit_json(report)
+    else:
+        sys.stdout.write(to_markdown(report))
+
+
+def cmd_describe(args):
+    metrics = measure_file(args.image) if args.image else None
+    report = describe(read_json(args.inspection), metrics, strict_contact=args.strict_contact)
+    write_report(report, args.format)
+    return 0
+
+
+def cmd_check(args):
+    output_dir = args.output_dir or args.scene.with_name(args.scene.stem + ".quality")
+    output_dir.mkdir(parents=True, exist_ok=True)
+    inspection_path = output_dir / "inspection.json"
+    preview = None if args.no_preview else output_dir / "preview.png"
+    run_inspection(args, inspection_path, preview)
+    metrics = measure_file(preview) if preview is not None and preview.is_file() else None
+    inspection = read_json(inspection_path)
+    report = describe(inspection, metrics, strict_contact=args.strict_contact)
+    technical = technical_report(inspection, strict_contact=args.strict_contact)
+    (output_dir / "technical.json").write_text(json.dumps(technical, indent=2), encoding="utf-8")
+    (output_dir / "report.md").write_text(to_markdown(report), encoding="utf-8")
+    (output_dir / "report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
+    write_report(report, args.format)
+    print(f"reports: {output_dir}", file=sys.stderr)
+    if args.strict and technical["passed"] != technical["total"]:
+        return 1
+    return 0
+
+
 def cmd_compare(args):
     rows = []
     for path in args.reports:
         report = read_json(path)
-        if report.get("schema_version") != 1 or report.get("kind") not in {"technical", "human"}:
+        if report.get("schema_version") not in {1, 2} or report.get("kind") not in {"technical", "human"}:
             raise UsageError(f"{path} is not a scored report")
         rows.append({"file": str(path), **report})
     emit_json({"reports": rows, "note": "No combined ranking: technical checks and human ratings differ."})
@@ -257,6 +299,34 @@ def build_parser():
         "--strict-contact", action="store_true", help="make floating objects a gate instead of a warning"
     )
     score.set_defaults(handler=cmd_score)
+
+    measure = sub.add_parser("measure", help="exposure and layout metrics of a rendered PNG (pure Python)")
+    measure.add_argument("image", type=Path)
+    measure.add_argument("--grid", type=int, default=8, help="cells per side of the luminance/detail grid")
+    measure.add_argument("--strict", action="store_true", help="exit 1 if any exposure warning is raised")
+    measure.set_defaults(handler=cmd_measure)
+
+    describe_cmd = sub.add_parser(
+        "describe", help="text report of what the camera sees, what is wrong and how to fix it"
+    )
+    describe_cmd.add_argument("inspection", type=Path, help="schema v2 inspection JSON")
+    describe_cmd.add_argument("--image", type=Path, help="render or preview PNG to add exposure facts")
+    describe_cmd.add_argument("--format", choices=["md", "json"], default="md")
+    describe_cmd.add_argument("--strict-contact", action="store_true")
+    describe_cmd.set_defaults(handler=cmd_describe)
+
+    check = sub.add_parser(
+        "check", help="inspect + preview render + measure + gates + report, in one isolated Blender run"
+    )
+    check.add_argument("scene", type=Path)
+    check.add_argument("--output-dir", type=Path, help="where to write reports (default: SCENE.quality/)")
+    check.add_argument("--no-preview", action="store_true", help="skip the small preview render")
+    check.add_argument("--format", choices=["md", "json"], default="md")
+    check.add_argument("--strict", action="store_true", help="exit 1 if any gate fails")
+    check.add_argument("--strict-contact", action="store_true")
+    add_inspection_options(check)
+    add_blender_options(check)
+    check.set_defaults(handler=cmd_check)
 
     review = sub.add_parser("review", help="validate a filled rubric and normalize the human score")
     review.add_argument("ratings", type=Path)

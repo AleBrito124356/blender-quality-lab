@@ -3,8 +3,8 @@
   "blender_version": "5.2.1 LTS",
   "file": {
     "name": "interior.blend",
-    "sha256": "a868633e0dbbc14479f773a9911ad2ac865e22768184269554b7157822d49a9c",
-    "bytes": 158677
+    "sha256": "4823334673267426f37d520e4d18847bce2d43debc2e40066e9566d5ba03d1eb",
+    "bytes": 159081
   },
   "scene": "QualityLab_interior",
   "scenes": [
@@ -2558,7 +2558,7 @@
       "material_count": 1,
       "vertices": 1106,
       "polygons": 1152,
-      "mesh_hash": "0e314a4b76ed750c",
+      "mesh_hash": "da89c05500c79414",
       "modifiers": [
         "WEIGHTED_NORMAL"
       ],
@@ -2584,7 +2584,7 @@
         "distance": 9.4718,
         "occluded": 0.0,
         "occluded_by": [],
-        "seen": 0.5547,
+        "seen": 0.5312,
         "coverage": 0.0104
       },
       "support": {
@@ -2737,14 +2737,14 @@
       "angle_off_axis_deg": 2.61,
       "angle_to_camera_deg": 59.48,
       "aimed_at_subject": true,
-      "reaches_subject": 0.6809,
-      "facing_but_blocked": 0.1297,
+      "reaches_subject": 0.6967,
+      "facing_but_blocked": 0.1307,
       "blocked_by": [
         "Side wall",
         "Chair seat",
         "Floating shelf.001"
       ],
-      "irradiance": 2.037
+      "irradiance": 2.0785
     },
     {
       "name": "Cool fill",
@@ -2766,14 +2766,14 @@
       "angle_off_axis_deg": 3.94,
       "angle_to_camera_deg": 34.13,
       "aimed_at_subject": true,
-      "reaches_subject": 0.8346,
-      "facing_but_blocked": 0.0841,
+      "reaches_subject": 0.8273,
+      "facing_but_blocked": 0.0831,
       "blocked_by": [
         "Side table top",
         "Chair seat",
         "Floating shelf.001"
       ],
-      "irradiance": 1.9185
+      "irradiance": 1.8989
     },
     {
       "name": "Edge separation",
@@ -2795,14 +2795,14 @@
       "angle_off_axis_deg": 1.3,
       "angle_to_camera_deg": 85.16,
       "aimed_at_subject": true,
-      "reaches_subject": 0.2699,
-      "facing_but_blocked": 0.3064,
+      "reaches_subject": 0.2871,
+      "facing_but_blocked": 0.2972,
       "blocked_by": [
         "Floating shelf.002",
         "Back wall",
         "Floating shelf.001"
       ],
-      "irradiance": 0.5786
+      "irradiance": 0.5867
     }
   ],
   "world": {
@@ -2952,6 +2952,6 @@
     "samples_per_object": 256,
     "raycast": true,
     "raycast_truncated": false,
-    "seconds": 0.52
+    "seconds": 0.5
   }
 }

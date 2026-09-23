@@ -3,8 +3,8 @@
   "blender_version": "5.2.1 LTS",
   "file": {
     "name": "abstract-no_lights_unused_emission.blend",
-    "sha256": "0397e5a251b73c44a445fef2461af41dc0e02234c7afe7a94da7223a7c769479",
-    "bytes": 188551
+    "sha256": "fde8a90337f062e32c9f235d905125ba809bbc1af38d87003d4adb1ff9ebb128",
+    "bytes": 188563
   },
   "scene": "QualityLab_abstract",
   "scenes": [
@@ -614,6 +614,13 @@
     "samples_per_object": 256,
     "raycast": true,
     "raycast_truncated": false,
-    "seconds": 0.14
+    "seconds": 0.93
+  },
+  "preview": {
+    "file": "abstract-no_lights_unused_emission-preview.png",
+    "percentage": 20,
+    "samples": 8,
+    "engine": "CYCLES",
+    "seconds": 3.22
   }
 }

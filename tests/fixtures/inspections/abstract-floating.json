@@ -3,8 +3,8 @@
   "blender_version": "5.2.1 LTS",
   "file": {
     "name": "abstract-floating.blend",
-    "sha256": "41e0e8fe250a7a419e2dc158189a685cb47c7c340af71840c530d293b6a34f62",
-    "bytes": 187983
+    "sha256": "4eaf97aff5511fd57eb13b4404ed25eb4eb8a84f02dc7d9c94191ffba872a021",
+    "bytes": 187999
   },
   "scene": "QualityLab_abstract",
   "scenes": [
@@ -757,6 +757,6 @@
     "samples_per_object": 256,
     "raycast": true,
     "raycast_truncated": false,
-    "seconds": 0.13
+    "seconds": 0.17
   }
 }

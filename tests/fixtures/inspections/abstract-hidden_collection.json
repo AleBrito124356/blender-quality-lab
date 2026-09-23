@@ -3,8 +3,8 @@
   "blender_version": "5.2.1 LTS",
   "file": {
     "name": "abstract-hidden_collection.blend",
-    "sha256": "18a3d9f77ac30fb26a631350fbfa267cf5c7d93bd6d9b1182d183dd5be9260f5",
-    "bytes": 188452
+    "sha256": "ba77aadf1fa87365326a5f827fd03ed55d87cccc7e02fe6f797a7c3e91db8ea2",
+    "bytes": 188470
   },
   "scene": "QualityLab_abstract",
   "scenes": [
@@ -450,5 +450,12 @@
     "raycast": false,
     "raycast_truncated": false,
     "seconds": 0.01
+  },
+  "preview": {
+    "file": "abstract-hidden_collection-preview.png",
+    "percentage": 20,
+    "samples": 8,
+    "engine": "CYCLES",
+    "seconds": 0.32
   }
 }

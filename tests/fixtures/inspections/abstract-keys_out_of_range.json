@@ -3,8 +3,8 @@
   "blender_version": "5.2.1 LTS",
   "file": {
     "name": "abstract-keys_out_of_range.blend",
-    "sha256": "c0209527e149fa2221490ace02ff2c87e8b35525fc1e21e9a6fc3d0b2c16ba71",
-    "bytes": 188818
+    "sha256": "4f452778be6a8d85065583b4b348bebf49ef7f080093cf43c61d4e4003af57d9",
+    "bytes": 188827
   },
   "scene": "QualityLab_abstract",
   "scenes": [
@@ -810,6 +810,6 @@
     "samples_per_object": 256,
     "raycast": true,
     "raycast_truncated": false,
-    "seconds": 0.12
+    "seconds": 0.93
   }
 }

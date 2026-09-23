@@ -13,12 +13,20 @@ from pathlib import Path
 import pytest
 
 from blender_quality import cli
+from blender_quality.describe import describe
+from blender_quality.image_metrics import measure_file
 from blender_quality.runner import BlenderError, find_blender, run_blender
 from blender_quality.scoring import technical_report
 
 pytestmark = pytest.mark.blender
 HERE = Path(__file__).parent
 FIXTURES = HERE.parent / "fixtures" / "inspections"
+RENDERS = HERE.parent / "fixtures" / "renders"
+PREVIEWS = {
+    "abstract": [],
+    "abstract-no_lights_unused_emission": ["black_frame"],
+    "abstract-hidden_collection": ["underexposed", "near_uniform"],
+}
 RECIPES = ["product", "abstract", "interior"]
 VARIANTS = {
     "camera_away": "subject_in_frame",
@@ -50,15 +58,30 @@ def lab(tmp_path_factory):
         target = root / f"abstract-{variant}.blend"
         run_blender(BLENDER, HERE / "sabotage.py", [target, variant], blend_file=scenes["abstract"])
         scenes[f"abstract-{variant}"] = target
-    inspections = {}
+    inspections, previews = {}, {}
+    update = os.environ.get("BQL_UPDATE_FIXTURES") == "1"
     for name, blend in scenes.items():
         output = root / f"{name}.json"
-        assert cli.main(["inspect", str(blend), "--output", str(output), "--blender", BLENDER]) == 0
+        command = ["inspect", str(blend), "--output", str(output), "--blender", BLENDER]
+        if name in PREVIEWS:
+            previews[name] = root / f"{name}-preview.png"
+            command += [
+                "--preview",
+                str(previews[name]),
+                "--preview-percentage",
+                "20",
+                "--preview-samples",
+                "8",
+            ]
+        assert cli.main(command) == 0
         inspections[name] = json.loads(output.read_text(encoding="utf-8"))
-        if os.environ.get("BQL_UPDATE_FIXTURES") == "1":
+        if update:
             FIXTURES.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(output, FIXTURES / f"{name}.json")
-    return {"root": root, "scenes": scenes, "inspections": inspections}
+            if name in previews:
+                RENDERS.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(previews[name], RENDERS / f"{name}-preview.png")
+    return {"root": root, "scenes": scenes, "inspections": inspections, "previews": previews}
 
 
 def primary_failures(report):
@@ -138,3 +161,38 @@ def test_lowest_ring_rests_on_the_plinth(lab):
 def test_fresh_inspection_reproduces_fixture(lab, name):
     recorded = json.loads((FIXTURES / f"{name}.json").read_text(encoding="utf-8"))
     assert stable_facts(lab["inspections"][name]) == stable_facts(recorded)
+
+
+@pytest.mark.parametrize("name", PREVIEWS)
+def test_preview_render_is_measured(lab, name):
+    metrics = measure_file(lab["previews"][name])
+    assert (metrics["width"], metrics["height"]) == (192, 144)
+    assert [w["id"] for w in metrics["warnings"]] == PREVIEWS[name]
+    assert lab["inspections"][name]["preview"]["percentage"] == 20
+
+
+@pytest.mark.parametrize(
+    "variant",
+    [
+        "camera_away",
+        "floating",
+        "hidden_collection",
+        "zero_scale_parent",
+        "no_lights_unused_emission",
+        "keys_out_of_range",
+    ],
+)
+def test_describe_fixes_repair_the_scene(lab, variant, tmp_path):
+    """Apply every Python fix `describe` suggests inside Blender; the repaired scene must pass all gates."""
+    name = f"abstract-{variant}"
+    report = describe(lab["inspections"][name], strict_contact=True)
+    snippets = [item["python"] for item in report["fixes"] if item["python"]]
+    assert snippets, report["fixes"]
+    fixes = tmp_path / "fixes.json"
+    fixes.write_text(json.dumps(snippets), encoding="utf-8")
+    repaired = tmp_path / f"{name}-fixed.blend"
+    run_blender(BLENDER, HERE / "apply_fixes.py", [fixes, repaired], blend_file=lab["scenes"][name])
+    output = tmp_path / "fixed.json"
+    assert cli.main(["inspect", str(repaired), "--output", str(output), "--blender", BLENDER]) == 0
+    result = technical_report(json.loads(output.read_text(encoding="utf-8")), strict_contact=True)
+    assert result["passed"] == result["total"], [c for c in result["checks"] if not c["passed"]]

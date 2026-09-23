@@ -3,8 +3,8 @@
   "blender_version": "5.2.1 LTS",
   "file": {
     "name": "abstract-camera_away.blend",
-    "sha256": "d5657ee0873641dd300a1b1492e2d3f6375d593229ae20ee955e3b94c42d0999",
-    "bytes": 187957
+    "sha256": "0b0a5a6067edc4917c603eca37dd34104574d0fc397f8caeb0f5dd6b50c8d737",
+    "bytes": 187974
   },
   "scene": "QualityLab_abstract",
   "scenes": [
@@ -749,6 +749,6 @@
     "samples_per_object": 256,
     "raycast": true,
     "raycast_truncated": false,
-    "seconds": 0.17
+    "seconds": 0.13
   }
 }

@@ -3,8 +3,8 @@
   "blender_version": "5.2.1 LTS",
   "file": {
     "name": "abstract.blend",
-    "sha256": "6585c2020c5f08823c0fee9a19458d6e66058579ea774767ea4c194ffce34884",
-    "bytes": 188193
+    "sha256": "9d07a9a49ba8714106947354f29e66b57f63ff2ca4e2c1390b8ca87fe7d3205f",
+    "bytes": 188207
   },
   "scene": "QualityLab_abstract",
   "scenes": [
@@ -787,6 +787,13 @@
     "samples_per_object": 256,
     "raycast": true,
     "raycast_truncated": false,
-    "seconds": 0.15
+    "seconds": 1.15
+  },
+  "preview": {
+    "file": "abstract-preview.png",
+    "percentage": 20,
+    "samples": 8,
+    "engine": "CYCLES",
+    "seconds": 1.6
   }
 }

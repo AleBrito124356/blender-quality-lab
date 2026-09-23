@@ -3,8 +3,8 @@
   "blender_version": "5.2.1 LTS",
   "file": {
     "name": "abstract-animated.blend",
-    "sha256": "f0a55a289927c2ac142be3be240092b6ccfcce8c880cc87993e8430045f88947",
-    "bytes": 189144
+    "sha256": "c99634b9daaa374b5a21913b0a5796db80472c6cd505df22e7e37b981e10093f",
+    "bytes": 189157
   },
   "scene": "QualityLab_abstract",
   "scenes": [
@@ -835,6 +835,6 @@
     "samples_per_object": 256,
     "raycast": true,
     "raycast_truncated": false,
-    "seconds": 0.14
+    "seconds": 1.09
   }
 }

@@ -3,8 +3,8 @@
   "blender_version": "5.2.1 LTS",
   "file": {
     "name": "product.blend",
-    "sha256": "d2b5235b0b2334be095db51f44319c2595064fb8fa772e51bdf685349cfe56b4",
-    "bytes": 110490
+    "sha256": "9d1051f880c93e4267532017fbd380b80d3a259821522fc8422859a9a7519e88",
+    "bytes": 110517
   },
   "scene": "QualityLab_product",
   "scenes": [
@@ -875,6 +875,6 @@
     "samples_per_object": 256,
     "raycast": true,
     "raycast_truncated": false,
-    "seconds": 0.13
+    "seconds": 1.88
   }
 }
