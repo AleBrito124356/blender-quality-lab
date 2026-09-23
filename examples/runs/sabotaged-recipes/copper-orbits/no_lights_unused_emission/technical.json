@@ -1,0 +1,77 @@
+{
+  "schema_version": 2,
+  "kind": "technical",
+  "passed": 10,
+  "total": 11,
+  "pass_rate": 90.9,
+  "checks": [
+    {
+      "id": "renderable_geometry",
+      "passed": true,
+      "description": "Something the camera can see renders geometry (object, collection, view-layer and instancer visibility)",
+      "detail": "5 visible objects render geometry"
+    },
+    {
+      "id": "camera",
+      "passed": true,
+      "description": "An active render camera exists",
+      "detail": "'Editorial camera'"
+    },
+    {
+      "id": "non_degenerate_world_transform",
+      "passed": true,
+      "description": "Render geometry has finite, non-collapsed world transforms (parents included)",
+      "detail": ""
+    },
+    {
+      "id": "subject_in_frame",
+      "passed": true,
+      "description": "The subject is inside the camera frame and not hidden behind other objects",
+      "detail": "100.0% of the subject surface is in frame, 19.8% of that hidden"
+    },
+    {
+      "id": "not_cropped_or_tiny",
+      "passed": true,
+      "description": "The subject fills at least 0.5% of the frame and at least 35% of it lies inside the frame",
+      "detail": "fills 20.2% of the frame"
+    },
+    {
+      "id": "effective_illumination",
+      "passed": false,
+      "description": "A light that reaches the subject, a non-black world or an emissive material on visible geometry",
+      "detail": "no lights; world strength 0.0; emissive materials not on any visible object: 'Unused glow'"
+    },
+    {
+      "id": "materials",
+      "passed": true,
+      "description": "Every visible object that renders geometry has a material",
+      "detail": ""
+    },
+    {
+      "id": "missing_images",
+      "passed": true,
+      "description": "No image used by a visible material or the world is missing on disk",
+      "detail": ""
+    },
+    {
+      "id": "resolution",
+      "passed": true,
+      "description": "Effective render resolution is at least 256 x 256",
+      "detail": "960 x 720"
+    },
+    {
+      "id": "animation_keys_in_range",
+      "passed": true,
+      "description": "Animation keys are finite and fall inside the scene frame range",
+      "detail": "no animation"
+    },
+    {
+      "id": "grounded",
+      "passed": true,
+      "description": "No group of objects floats above the surface below it (--strict-contact)",
+      "detail": ""
+    }
+  ],
+  "warnings": [],
+  "note": "Technical gates are not an aesthetic score. They are computed from scene geometry, not pixels."
+}

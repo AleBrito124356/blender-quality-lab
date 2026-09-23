@@ -1,0 +1,461 @@
+{
+  "schema_version": 2,
+  "blender_version": "5.2.1 LTS",
+  "file": {
+    "name": "abstract-hidden_collection.blend",
+    "sha256": "ba77aadf1fa87365326a5f827fd03ed55d87cccc7e02fe6f797a7c3e91db8ea2",
+    "bytes": 188470
+  },
+  "scene": "QualityLab_abstract",
+  "scenes": [
+    {
+      "name": "QualityLab_abstract",
+      "objects": 9
+    }
+  ],
+  "view_layer": "ViewLayer",
+  "engine": "CYCLES",
+  "resolution": [960, 720],
+  "render": {
+    "samples": 32,
+    "film_transparent": false,
+    "view_transform": "AgX",
+    "look": "None",
+    "exposure": 0.0,
+    "gamma": 1.0
+  },
+  "units": {
+    "system": "METRIC",
+    "scale_length": 1.0
+  },
+  "camera": {
+    "name": "Editorial camera",
+    "type": "PERSP",
+    "lens_mm": 55.0,
+    "ortho_scale": null,
+    "sensor_mm": [36.0, 24.0],
+    "sensor_fit": "AUTO",
+    "shift": [0.0, 0.0],
+    "clip": [0.1, 1000.0],
+    "location": [5.0, -7.0, 4.0],
+    "rotation_euler": [1.272, -0.0, 0.6202],
+    "rotation_mode": "XYZ",
+    "forward": [-0.5555, 0.7777, -0.2944],
+    "up": [-0.1711, 0.2396, 0.9557],
+    "right": [0.8137, 0.5812, 0.0],
+    "hfov_deg": 36.24,
+    "vfov_deg": 27.58,
+    "dof": {
+      "use": false,
+      "focus_distance": 10.0,
+      "focus_object": null,
+      "fstop": 2.8
+    }
+  },
+  "frame": null,
+  "subject": null,
+  "objects": [
+    {
+      "name": "Editorial camera",
+      "type": "CAMERA",
+      "data": "Editorial camera",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [5.0, -7.0, 4.0],
+      "rotation_euler": [1.272, -0.0, 0.6202],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [0.81373, -0.17112, 0.55548, 5.0],
+        [0.58124, 0.23957, -0.77767, -7.0],
+        [0.0, 0.95568, 0.2944, 4.0],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 0.999999997,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 0,
+      "vertices": 0,
+      "polygons": 0
+    },
+    {
+      "name": "Large warm key",
+      "type": "LIGHT",
+      "data": "Large warm key",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [-3.0, -4.0, 6.0],
+      "rotation_euler": [0.8217, 0.0, -0.6435],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [0.8, 0.40861, -0.43936, -3.0],
+        [-0.6, 0.54481, -0.58582, -4.0],
+        [-0.0, 0.73227, 0.68101, 6.0],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 0.999999986,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 0,
+      "vertices": 0,
+      "polygons": 0
+    },
+    {
+      "name": "Cool fill",
+      "type": "LIGHT",
+      "data": "Cool fill",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [4.0, -1.0, 3.0],
+      "rotation_euler": [1.1901, 0.0, 1.3258],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [0.24254, -0.36044, 0.9007, 4.0],
+        [0.97014, 0.09011, -0.22517, -1.0],
+        [-0.0, 0.92842, 0.37154, 3.0],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.000000006,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 0,
+      "vertices": 0,
+      "polygons": 0
+    },
+    {
+      "name": "Edge separation",
+      "type": "LIGHT",
+      "data": "Edge separation",
+      "parent": null,
+      "collections": [
+        "Scene Collection"
+      ],
+      "hide_render": false,
+      "render_visible": true,
+      "camera_visible": true,
+      "hidden_by": [],
+      "location": [1.0, 4.0, 5.0],
+      "rotation_euler": [0.8462, -0.0, 2.8966],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [-0.97014, -0.16076, 0.1816, 1.0],
+        [0.24254, -0.64305, 0.7264, 4.0],
+        [0.0, 0.74876, 0.66284, 5.0],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.000000031,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 0,
+      "vertices": 0,
+      "polygons": 0
+    },
+    {
+      "name": "Backdrop floor",
+      "type": "MESH",
+      "data": "Cube.001",
+      "parent": null,
+      "collections": [
+        "Disabled for render"
+      ],
+      "hide_render": false,
+      "render_visible": false,
+      "camera_visible": false,
+      "hidden_by": [
+        "collection 'Disabled for render' has hide_render on"
+      ],
+      "location": [0.0, 0.0, -0.075],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, -0.075],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 0,
+      "vertices": 0,
+      "polygons": 0,
+      "mesh_hash": "7bcc1eb26394b201",
+      "modifiers": [
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": false
+    },
+    {
+      "name": "Exhibition plinth",
+      "type": "MESH",
+      "data": "Cube.002",
+      "parent": null,
+      "collections": [
+        "Disabled for render"
+      ],
+      "hide_render": false,
+      "render_visible": false,
+      "camera_visible": false,
+      "hidden_by": [
+        "collection 'Disabled for render' has hide_render on"
+      ],
+      "location": [0.0, 0.0, 0.3],
+      "rotation_euler": [0.0, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 1.0, 0.0, 0.0],
+        [0.0, 0.0, 1.0, 0.3],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 0,
+      "vertices": 0,
+      "polygons": 0,
+      "mesh_hash": "7d49c778139f0852",
+      "modifiers": [
+        "BEVEL",
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": false
+    },
+    {
+      "name": "Copper orbit 1",
+      "type": "MESH",
+      "data": "Torus",
+      "parent": null,
+      "collections": [
+        "Disabled for render"
+      ],
+      "hide_render": false,
+      "render_visible": false,
+      "camera_visible": false,
+      "hidden_by": [
+        "collection 'Disabled for render' has hide_render on"
+      ],
+      "location": [-0.46, 0.0, 1.402],
+      "rotation_euler": [1.5708, -0.4, -0.5],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [0.80831, -0.34175, -0.47943, -0.46],
+        [-0.44158, 0.1867, -0.87758, 0.0],
+        [0.38942, 0.92106, -0.0, 1.40198],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 0.999999962,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 0,
+      "vertices": 0,
+      "polygons": 0,
+      "mesh_hash": "286c99dd4095ba2f",
+      "modifiers": [
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": false
+    },
+    {
+      "name": "Copper orbit 2",
+      "type": "MESH",
+      "data": "Torus.001",
+      "parent": null,
+      "collections": [
+        "Disabled for render"
+      ],
+      "hide_render": false,
+      "render_visible": false,
+      "camera_visible": false,
+      "hidden_by": [
+        "collection 'Disabled for render' has hide_render on"
+      ],
+      "location": [0.0, 0.0, 1.562],
+      "rotation_euler": [1.5708, 0.0, 0.0],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, -0.0, -1.0, 0.0],
+        [0.0, 1.0, -0.0, 1.56198],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 1.0,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 0,
+      "vertices": 0,
+      "polygons": 0,
+      "mesh_hash": "286c99dd4095ba2f",
+      "modifiers": [
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": false
+    },
+    {
+      "name": "Copper orbit 3",
+      "type": "MESH",
+      "data": "Torus.002",
+      "parent": null,
+      "collections": [
+        "Disabled for render"
+      ],
+      "hide_render": false,
+      "render_visible": false,
+      "camera_visible": false,
+      "hidden_by": [
+        "collection 'Disabled for render' has hide_render on"
+      ],
+      "location": [0.46, 0.0, 1.722],
+      "rotation_euler": [1.5708, 0.4, 0.5],
+      "scale": [1.0, 1.0, 1.0],
+      "matrix_world": [
+        [0.80831, 0.34175, 0.47943, 0.46],
+        [0.44158, 0.1867, -0.87758, 0.0],
+        [-0.38942, 0.92106, -0.0, 1.72198],
+        [0.0, 0.0, 0.0, 1.0]
+      ],
+      "finite": true,
+      "world_determinant": 0.999999962,
+      "world_axis_lengths": [1.0, 1.0, 1.0],
+      "degenerate_axes": 0,
+      "material_count": 0,
+      "vertices": 0,
+      "polygons": 0,
+      "mesh_hash": "286c99dd4095ba2f",
+      "modifiers": [
+        "WEIGHTED_NORMAL"
+      ],
+      "renders_geometry": false
+    }
+  ],
+  "lights": [
+    {
+      "name": "Large warm key",
+      "type": "AREA",
+      "energy": 900.0,
+      "exposure": 0.0,
+      "color": [1.0, 0.85, 0.65],
+      "use_temperature": false,
+      "render_visible": true,
+      "hidden_by": [],
+      "location": [-3.0, -4.0, 6.0],
+      "direction": [0.4394, 0.5858, -0.681],
+      "cast_shadows": true,
+      "shape": "DISK",
+      "size": 4.0,
+      "spread_deg": 180.0,
+      "normalize": true,
+      "aimed_at_subject": null,
+      "reaches_subject": null,
+      "irradiance": 0.0
+    },
+    {
+      "name": "Cool fill",
+      "type": "AREA",
+      "energy": 400.0,
+      "exposure": 0.0,
+      "color": [0.65, 0.78, 1.0],
+      "use_temperature": false,
+      "render_visible": true,
+      "hidden_by": [],
+      "location": [4.0, -1.0, 3.0],
+      "direction": [-0.9007, 0.2252, -0.3715],
+      "cast_shadows": true,
+      "shape": "DISK",
+      "size": 3.0,
+      "spread_deg": 180.0,
+      "normalize": true,
+      "aimed_at_subject": null,
+      "reaches_subject": null,
+      "irradiance": 0.0
+    },
+    {
+      "name": "Edge separation",
+      "type": "AREA",
+      "energy": 1000.0,
+      "exposure": 0.0,
+      "color": [1.0, 0.67, 0.4],
+      "use_temperature": false,
+      "render_visible": true,
+      "hidden_by": [],
+      "location": [1.0, 4.0, 5.0],
+      "direction": [-0.1816, -0.7264, -0.6628],
+      "cast_shadows": true,
+      "shape": "DISK",
+      "size": 2.0,
+      "spread_deg": 180.0,
+      "normalize": true,
+      "aimed_at_subject": null,
+      "reaches_subject": null,
+      "irradiance": 0.0
+    }
+  ],
+  "world": {
+    "name": "Low contrast studio world",
+    "strength": 0.25,
+    "color": [0.12, 0.14, 0.18],
+    "textured": false,
+    "radiance": 0.0347,
+    "film_transparent": false,
+    "textures": []
+  },
+  "materials": [],
+  "illumination": {
+    "lights": 3,
+    "render_visible_lights": 3,
+    "lights_reaching_subject": 0,
+    "emissive_materials": [],
+    "unused_emissive_materials": []
+  },
+  "contacts": {
+    "tolerance": 0.005,
+    "floating": []
+  },
+  "animation": {
+    "frame_start": 1,
+    "frame_end": 250,
+    "frame_current": 1,
+    "fps": 24.0,
+    "objects": [],
+    "python_drivers_not_evaluated": 0
+  },
+  "missing_images": [],
+  "inspector": {
+    "samples_per_object": 256,
+    "raycast": false,
+    "raycast_truncated": false,
+    "seconds": 0.01
+  },
+  "preview": {
+    "file": "abstract-hidden_collection-preview.png",
+    "percentage": 20,
+    "samples": 8,
+    "engine": "CYCLES",
+    "seconds": 0.32
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "status": "timeout",
+  "model": "none (inspection stopped by --timeout 0.5)",
+  "steps": 0,
+  "total_tokens": 0,
+  "elapsed_seconds": 0.54,
+  "error": "Blender did not finish within 0.5 s; it was stopped (raise --timeout for heavy scenes)"
+}

@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "blender-quality-lab"
-version = "0.1.0"
-description = "Reproducible Blender scene recipes, technical audits and honest human quality evaluation."
+version = "0.2.0"
+description = "Blender scene recipes, vision-free scene inspection with technical gates and fixes, and honest evaluation tooling."
 readme = "README.md"
 requires-python = ">=3.11"
 license = "MIT"
@@ -23,6 +23,9 @@ packages = ["src/blender_quality"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# Blender integration tests are opt-in: `python -m pytest -m blender` (skipped if Blender is absent).
+addopts = ["-m", "not blender"]
+markers = ["blender: needs a real Blender executable (builds, sabotages and inspects scenes)"]
 
 [tool.ruff]
 line-length = 110
