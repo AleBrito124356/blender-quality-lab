@@ -20,7 +20,7 @@ Camera 'Editorial camera' (PERSP, 55.0 mm) at [5.0, -7.0, 4.0], looking along [-
 
 ## Grounding
 
-Every object group rests on or touches something (tolerance 0.005).
+No geometry with surface area to check.
 
 ## Lighting
 

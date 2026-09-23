@@ -116,7 +116,9 @@ def _hidden_geometry_detail(scene):
         if obj["type"] in GEOMETRY_TYPES and obj["hidden_by"]:
             reasons.setdefault(obj["hidden_by"][0], []).append(obj["name"])
     if not reasons:
-        return "the scene has no geometry that renders"
+        if not any(obj["type"] in GEOMETRY_TYPES for obj in scene["objects"]):
+            return "the scene has no geometry objects at all"
+        return "the scene has no geometry that renders (objects without faces, or instanced away)"
     return "; ".join(f"{names(objs)}: {reason}" for reason, objs in reasons.items())
 
 
@@ -164,8 +166,12 @@ def gates(scene, strict_contact=False):
     if not sane:
         prerequisites.append("non_degenerate_world_transform")
     in_frame_ok = False
+    panoramic = bool(camera) and camera.get("type") == "PANO"
     if prerequisites:
         add("subject_in_frame", False, SUBJECT_IN_FRAME, "", blocked_by=prerequisites)
+    elif panoramic:
+        add("subject_in_frame", True, SUBJECT_IN_FRAME, "not analysed: panoramic camera")
+        add("not_cropped_or_tiny", True, NOT_CROPPED, "not analysed: panoramic camera")
     elif subject is None or subject.get("in_frame") is None:
         add("subject_in_frame", False, SUBJECT_IN_FRAME, "no subject geometry with surface area to frame")
     else:
@@ -186,7 +192,9 @@ def gates(scene, strict_contact=False):
         else:
             detail = f"{pct(share)} of the subject surface is in frame, {pct(occluded)} of that hidden"
         add("subject_in_frame", in_frame_ok, SUBJECT_IN_FRAME, detail)
-    if not in_frame_ok:
+    if panoramic and not prerequisites:
+        pass  # both framing gates were recorded above as not analysed
+    elif not in_frame_ok:
         add("not_cropped_or_tiny", False, NOT_CROPPED, "", blocked_by=prerequisites or ["subject_in_frame"])
     else:
         coverage = subject.get("coverage")

@@ -49,7 +49,7 @@ Legend: ; `.` background
 
 ## Grounding
 
-Every object group rests on or touches something (tolerance 0.005).
+No geometry with surface area to check.
 
 ## Lighting
 

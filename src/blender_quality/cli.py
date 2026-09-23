@@ -241,6 +241,8 @@ def cmd_check(args):
     output_dir.mkdir(parents=True, exist_ok=True)
     inspection_path = output_dir / "inspection.json"
     preview = None if args.no_preview else output_dir / "preview.png"
+    for stale in (inspection_path, output_dir / "preview.png"):
+        stale.unlink(missing_ok=True)  # never measure or report a previous run's files
     run_inspection(args, inspection_path, preview)
     metrics = measure_file(preview) if preview is not None and preview.is_file() else None
     inspection = read_json(inspection_path)

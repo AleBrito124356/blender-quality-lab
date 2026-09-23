@@ -62,7 +62,7 @@ The facts come from geometry, not pixels, so a model or reviewer without vision 
 - **Animation.** Keys are read through the Blender 5 layered-action API (`channelbag(slot).fcurves`, with the legacy `action.fcurves` fallback), including NLA. It reports key ranges against the frame range, non-finite keys, Python drivers that were not evaluated, and motion sampled over the range: path length, speed, jumps, and whether the subject stays in frame.
 - **Also recorded:** the camera (lens, FOV, clip range, depth of field), world, missing images (and whether they are used), units, other scenes, and the file's SHA-256.
 
-`inspect --preview preview.png` also renders a small final-engine preview (25% size, 16 samples by default) so exposure can be measured.
+`inspect --preview preview.png` also renders a small final-engine preview (25% size, 16 samples by default) so exposure can be measured. A scene that cannot render (no camera, engine error) still gets its inspection, and the preview records why it was skipped.
 
 ### Technical gates
 
@@ -71,7 +71,7 @@ The facts come from geometry, not pixels, so a model or reviewer without vision 
 | Gate | Fails when | Known false positives / negatives |
 | --- | --- | --- |
 | `renderable_geometry` | Nothing the camera can see produces render geometry | Volume-, point-cloud- or hair-only scenes are not raycast and fail |
-| `camera` | `scene.camera` is not set | Panoramic cameras pass but their framing is not analysed |
+| `camera` | `scene.camera` is not set | Panoramic cameras pass; the two framing gates then report "not analysed" and pass |
 | `non_degenerate_world_transform` | Render geometry is non-finite or collapsed to a point/line in world space (parents included) | A helper mesh hidden by zero scale fails; flattening one axis is only a warning |
 | `subject_in_frame` | Under 5% of the subject surface is in frame, or 95% of the in-frame part is hidden behind other objects | The subject heuristic can pick the wrong objects (use `--subject`); glass counts as an occluder for the camera |
 | `not_cropped_or_tiny` | The subject fills under 0.5% of the frame, or under 35% of it is inside the frame | Deliberate extreme close-ups and very wide establishing shots |
@@ -189,7 +189,7 @@ The `report.md` of `check` is designed to be fed back to a model that has no vis
 ```sh
 python -m pip install -e ".[dev]"
 python -m pytest -q                 # offline: scoring, gates, metrics, describe, diff, summarize, CLI
-python -m pytest -m blender -q      # needs Blender: builds and inspects 11 scenes, repairs 6 broken ones
+python -m pytest -m blender -q      # needs Blender: builds and inspects 14 scenes, repairs 7 broken ones
 python -m ruff check src tests examples && python -m ruff format --check src tests examples
 python -m build
 ```

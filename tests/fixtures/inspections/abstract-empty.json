@@ -1,0 +1,72 @@
+{
+  "schema_version": 2,
+  "blender_version": "5.2.1 LTS",
+  "file": {
+    "name": "abstract-empty.blend",
+    "sha256": "607327b40a84805d5ccbe90fdfe0758c2e18cbc0586bb6ae06ebbc6af24a9c94",
+    "bytes": 91482
+  },
+  "scene": "QualityLab_abstract",
+  "scenes": [
+    {
+      "name": "QualityLab_abstract",
+      "objects": 0
+    }
+  ],
+  "view_layer": "ViewLayer",
+  "engine": "CYCLES",
+  "resolution": [960, 720],
+  "render": {
+    "samples": 32,
+    "film_transparent": false,
+    "view_transform": "AgX",
+    "look": "None",
+    "exposure": 0.0,
+    "gamma": 1.0
+  },
+  "units": {
+    "system": "METRIC",
+    "scale_length": 1.0
+  },
+  "camera": null,
+  "frame": null,
+  "subject": null,
+  "objects": [],
+  "lights": [],
+  "world": {
+    "name": "Low contrast studio world",
+    "strength": 0.25,
+    "color": [0.12, 0.14, 0.18],
+    "textured": false,
+    "radiance": 0.0347,
+    "film_transparent": false,
+    "textures": []
+  },
+  "materials": [],
+  "illumination": {
+    "lights": 0,
+    "render_visible_lights": 0,
+    "lights_reaching_subject": 0,
+    "emissive_materials": [],
+    "unused_emissive_materials": []
+  },
+  "contacts": {
+    "tolerance": 0.005,
+    "floating": []
+  },
+  "animation": {
+    "frame_start": 1,
+    "frame_end": 250,
+    "frame_current": 1,
+    "fps": 24.0,
+    "objects": [],
+    "python_drivers_not_evaluated": 0
+  },
+  "missing_images": [],
+  "inspector": {
+    "samples_per_object": 256,
+    "raycast": false,
+    "raycast_truncated": false,
+    "seconds": 0.0
+  }
+}

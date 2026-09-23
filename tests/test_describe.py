@@ -148,3 +148,11 @@ def test_color_names():
     assert color_name([0.05, 0.05, 0.05]) == "near-black"
     assert color_name([0.1, 0.2, 0.8]) == "mid blue"
     assert color_name("texture") == "textured"
+
+
+def test_missing_camera_gets_a_framing_camera():
+    first = describe(load("abstract-no_camera"))["fixes"][0]
+    assert first["id"] == "camera"
+    assert "bpy.context.scene.camera = cam" in first["python"]
+    pano = to_markdown(describe(load("abstract-pano_camera")))
+    assert "framing is not analysed" in pano

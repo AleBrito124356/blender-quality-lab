@@ -121,8 +121,10 @@ def camera_fix(scene, reason, keep_location=True):
     center, radius = subject["center"], subject["radius"]
     location = camera["location"]
     distance = fit_distance(radius, camera)
+    if distance is None:
+        keep_location = True  # no field of view to fit (panoramic camera): only re-aim
     direction = unit(sub(location, center))
-    if not keep_location and distance:
+    if not keep_location:
         location = add(center, scale(direction, distance))
     rotation = look_at_euler(location, center)
     code = f"cam = {obj_ref(camera['name'])}; "
@@ -201,11 +203,12 @@ def fixes_for(scene, report, metrics):
                         code.append(f"{obj_ref(obj['name'])}.hide_render = False")
                     elif reason == "camera ray visibility is off":
                         code.append(f"{obj_ref(obj['name'])}.visible_camera = True")
+            action = "Make the geometry render again" if code else "Add geometry the camera can see"
             fix(
                 1,
                 key,
                 f"Nothing the camera can see renders: {detail}",
-                "Make the geometry render again",
+                action,
                 "; ".join(dict.fromkeys(code)) or None,
             )
         elif key == "camera":
@@ -515,6 +518,7 @@ def describe(scene, metrics=None, strict_contact=False):
     out["grounding"] = {
         "floating": scene["contacts"]["floating"],
         "tolerance": scene["contacts"].get("tolerance"),
+        "checked": sum(1 for o in scene["objects"] if "support" in o),
     }
     summary = lighting_summary(scene)
     out["lighting"] = {
@@ -622,7 +626,11 @@ def to_markdown(d):
         lines.append("")
     camera = d.get("camera")
     lines += ["## What the camera sees", ""]
-    if camera:
+    if camera and camera.get("type") == "PANO":
+        lines.append(
+            f"Panoramic camera '{camera['name']}' at {camera.get('location')}: framing is not analysed."
+        )
+    elif camera:
         lines.append(
             f"Camera '{camera['name']}' ({camera['type']}, {camera['lens_mm']} mm) at {camera['location']}, "
             f"looking along {camera['looking']}, field of view {camera['fov_deg'][0]} x {camera['fov_deg'][1]} degrees."
@@ -665,6 +673,8 @@ def to_markdown(d):
     if floating:
         for group in floating:
             lines.append(f"- {names(group['objects'])} float {group['gap']} above '{group['above']}'.")
+    elif not d["grounding"].get("checked"):
+        lines.append("No geometry with surface area to check.")
     else:
         lines.append(
             f"Every object group rests on or touches something (tolerance {d['grounding']['tolerance']})."

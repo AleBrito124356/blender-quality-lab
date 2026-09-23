@@ -183,3 +183,15 @@ def test_partial_v2_inspection_is_rejected():
     del scene["objects"][0]["degenerate_axes"]
     with pytest.raises(ValueError, match=r"objects\[0\] is missing 'degenerate_axes'"):
         technical_report(scene)
+
+
+def test_scenes_without_a_usable_camera():
+    no_camera = technical_report(load("abstract-no_camera"))
+    assert primary_failures(no_camera) == {"camera"}
+    assert check(no_camera, "subject_in_frame")["blocked_by"] == ["camera"]
+    pano = technical_report(load("abstract-pano_camera"))
+    assert pano["passed"] == pano["total"]
+    assert check(pano, "subject_in_frame")["detail"] == "not analysed: panoramic camera"
+    empty = technical_report(load("abstract-empty"))
+    assert primary_failures(empty) == {"renderable_geometry", "camera"}
+    assert check(empty, "renderable_geometry")["detail"] == "the scene has no geometry objects at all"

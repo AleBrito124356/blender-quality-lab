@@ -13,6 +13,8 @@ text-only workflow, so the inspector and gates can be tested against real Blende
   new camera position); geometry, names and materials stay untouched.
 - animated: a valid 48-frame animation (a ring bobs up and down, the camera dollies).
 - keys_out_of_range: a ring keyed on frames 300-400 while the scene renders 1-250.
+- no_camera / pano_camera / empty: scenes the inspector and `check` must survive (no active
+  camera, a panoramic camera, every object deleted).
 
 Usage: blender --background --factory-startup --disable-autoexec recipe.blend
        --python sabotage.py -- OUTPUT.blend VARIANT
@@ -32,6 +34,9 @@ VARIANTS = (
     "relight",
     "animated",
     "keys_out_of_range",
+    "no_camera",
+    "pano_camera",
+    "empty",
 )
 
 
@@ -101,6 +106,13 @@ def apply(variant, scene):
         ring.keyframe_insert("rotation_euler", frame=300)
         ring.rotation_euler.z += math.pi
         ring.keyframe_insert("rotation_euler", frame=400)
+    elif variant == "no_camera":
+        bpy.data.objects.remove(camera, do_unlink=True)
+    elif variant == "pano_camera":
+        camera.data.type = "PANO"
+    elif variant == "empty":
+        for obj in list(scene.objects):
+            bpy.data.objects.remove(obj, do_unlink=True)
     else:
         raise SystemExit(f"unknown variant {variant!r}; choose from {', '.join(VARIANTS)}")
 

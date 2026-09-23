@@ -29,14 +29,17 @@ PREVIEWS = {
 }
 RECIPES = ["product", "abstract", "interior"]
 VARIANTS = {
-    "camera_away": "subject_in_frame",
-    "floating": None,
-    "hidden_collection": "renderable_geometry",
-    "zero_scale_parent": "non_degenerate_world_transform",
-    "no_lights_unused_emission": "effective_illumination",
-    "relight": None,
-    "animated": None,
-    "keys_out_of_range": "animation_keys_in_range",
+    "camera_away": {"subject_in_frame"},
+    "floating": set(),
+    "hidden_collection": {"renderable_geometry"},
+    "zero_scale_parent": {"non_degenerate_world_transform"},
+    "no_lights_unused_emission": {"effective_illumination"},
+    "relight": set(),
+    "animated": set(),
+    "keys_out_of_range": {"animation_keys_in_range"},
+    "no_camera": {"camera"},
+    "pano_camera": set(),
+    "empty": {"renderable_geometry", "camera"},
 }
 
 try:
@@ -126,8 +129,7 @@ def test_recipes_pass_every_gate_even_strict_contact(lab, recipe):
 @pytest.mark.parametrize("variant", VARIANTS)
 def test_each_sabotage_fails_exactly_its_gate(lab, variant):
     inspection = lab["inspections"][f"abstract-{variant}"]
-    expected = {VARIANTS[variant]} if VARIANTS[variant] else set()
-    assert primary_failures(technical_report(inspection)) == expected
+    assert primary_failures(technical_report(inspection)) == VARIANTS[variant]
     if variant == "floating":
         assert primary_failures(technical_report(inspection, strict_contact=True)) == {"grounded"}
 
@@ -180,6 +182,7 @@ def test_preview_render_is_measured(lab, name):
         "zero_scale_parent",
         "no_lights_unused_emission",
         "keys_out_of_range",
+        "no_camera",
     ],
 )
 def test_describe_fixes_repair_the_scene(lab, variant, tmp_path):
@@ -196,3 +199,17 @@ def test_describe_fixes_repair_the_scene(lab, variant, tmp_path):
     assert cli.main(["inspect", str(repaired), "--output", str(output), "--blender", BLENDER]) == 0
     result = technical_report(json.loads(output.read_text(encoding="utf-8")), strict_contact=True)
     assert result["passed"] == result["total"], [c for c in result["checks"] if not c["passed"]]
+
+
+@pytest.mark.parametrize("variant", ["no_camera", "pano_camera", "empty"])
+def test_check_survives_scenes_that_cannot_be_framed(lab, variant, tmp_path):
+    scene = lab["scenes"][f"abstract-{variant}"]
+    output = tmp_path / "quality"
+    assert cli.main(["check", str(scene), "--output-dir", str(output), "--blender", BLENDER]) == 0
+    inspection = json.loads((output / "inspection.json").read_text(encoding="utf-8"))
+    assert (output / "report.md").read_text(encoding="utf-8").startswith("# Scene report")
+    if variant == "pano_camera":
+        assert (output / "preview.png").is_file()
+    else:
+        assert inspection["preview"]["skipped"] == "the scene has no active camera"
+        assert not (output / "preview.png").exists()

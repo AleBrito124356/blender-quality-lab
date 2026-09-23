@@ -15,7 +15,7 @@
 - v2 gates with `blocked_by` dependencies, advisory warnings and `score --strict-contact`.
 - `measure`: a dependency-free PNG decoder and exposure/layout metrics.
 - `describe`: a Markdown/JSON report with an ASCII object map and prioritized fixes that carry Blender Python.
-- `check`: inspect, preview render, measure, score and report in one isolated Blender run. `inspect --preview` renders the preview alone.
+- `check`: inspect, preview render, measure, score and report in one isolated Blender run. `inspect --preview` renders the preview alone. A scene that cannot render still gets its inspection and report; the preview records why it was skipped.
 - `doctor`: shows the Blender that will be used, how it was found and its version.
 - `briefs list|show|validate`. The briefs now ship inside the package.
 - `diff`: before/after scene comparison with an objective preserve-and-relight verdict (`--original` proves the input was not overwritten).

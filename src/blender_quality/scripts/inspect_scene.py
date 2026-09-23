@@ -1062,8 +1062,14 @@ def missing_images(used_images):
 
 
 def preview_render(scene, path, percentage, samples):
-    """A small final-engine render so exposure can be measured without a vision model."""
+    """A small final-engine render so exposure can be measured without a vision model.
+
+    A scene that cannot render (no camera, engine error) still gets its inspection: the preview
+    records why it was skipped instead of failing the whole run.
+    """
     started = time.perf_counter()
+    if scene.camera is None:
+        return {"file": None, "skipped": "the scene has no active camera"}
     render = scene.render
     render.resolution_percentage = percentage
     if render.engine == "CYCLES":
@@ -1077,7 +1083,10 @@ def preview_render(scene, path, percentage, samples):
     settings.color_mode = "RGBA" if render.film_transparent else "RGB"
     settings.color_depth = "8"
     render.filepath = str(path)
-    bpy.ops.render.render(write_still=True)
+    try:
+        bpy.ops.render.render(write_still=True)
+    except RuntimeError as exc:
+        return {"file": None, "skipped": f"render failed: {str(exc).strip()}"}
     return {
         "file": Path(path).name,
         "percentage": percentage,
@@ -1379,9 +1388,13 @@ def inspect(args):
         samples = None
     camera_facts = camera.facts() if camera is not None else None
     if camera is None and camera_obj is not None and camera_obj.type == "CAMERA":
+        matrix = camera_obj.matrix_world.normalized()
         camera_facts = {
             "name": camera_obj.name,
             "type": "PANO",
+            "location": vec(matrix.translation),
+            "rotation_euler": vec(camera_obj.rotation_euler),
+            "forward": vec(-np.array(matrix.to_3x3().col[2])),
             "note": "panoramic camera: framing not analysed",
         }
     report = {
