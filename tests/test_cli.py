@@ -1,3 +1,4 @@
+import importlib.util
 import json
 import shutil
 import subprocess
@@ -111,11 +112,14 @@ def test_blender_failure_is_one_line_plus_tail(monkeypatch, capsys, tmp_path, fa
     assert "  | boom" in err.splitlines()
 
 
-def test_real_non_blender_executable_fails_cleanly(capsys, tmp_path):
+@pytest.mark.skipif(importlib.util.find_spec("bpy") is not None, reason="this Python can import bpy")
+def test_python_without_bpy_fails_cleanly(capsys, tmp_path):
+    # A Python interpreter is accepted as --blender, but it must be able to import bpy.
     code, _, err = run_cli(
         capsys, "build", "abstract", "--output", tmp_path / "o", "--blender", sys.executable
     )
-    assert_clean_error(err, code, 1, "Blender exited with code 2")
+    assert_clean_error(err, code, 1, "cannot import bpy")
+    assert "pip install bpy" in err
 
 
 def test_timeout_is_reported_cleanly(monkeypatch, capsys, tmp_path, fake_exe):
@@ -273,3 +277,61 @@ def test_score_strict_contact(capsys):
     floating = FIXTURES / "inspections" / "abstract-floating.json"
     assert run_cli(capsys, "score", floating, "--strict")[0] == 0
     assert run_cli(capsys, "score", floating, "--strict", "--strict-contact")[0] == 1
+
+
+@pytest.fixture
+def fake_python(tmp_path):
+    exe = tmp_path / "venv" / "bin" / "python3.13"
+    exe.parent.mkdir(parents=True)
+    exe.write_text("fake", encoding="utf-8")
+    return exe
+
+
+@pytest.mark.parametrize("command", ["build", "inspect"])
+def test_bpy_interpreter_runs_the_launcher_isolated(command, monkeypatch, capsys, tmp_path, fake_python):
+    fake = FakeBlender()
+    monkeypatch.setattr(subprocess, "run", fake)
+    monkeypatch.setenv("BLENDER", str(fake_python))
+    scene = tmp_path / "scene.blend"
+    scene.write_bytes(b"BLENDER")
+    if command == "build":
+        argv = ["build", "abstract", "--output", tmp_path / "out"]
+    else:
+        argv = ["inspect", scene, "--output", tmp_path / "inspection.json"]
+    code, _out, err = run_cli(capsys, *argv)
+    assert code == 0
+    ((called, kwargs),) = fake.calls
+    assert called[:3] == [str(fake_python), "-I", str(cli.SCRIPTS / "bpy_launcher.py")]
+    assert called[3:6] == ["--background", "--factory-startup", "--disable-autoexec"]
+    assert called.index("--disable-autoexec") < called.index("--python")
+    assert "BLENDER_USER_SCRIPTS" not in kwargs["env"]
+    assert "[bpy module]" in err
+
+
+def test_doctor_reports_the_kind(monkeypatch, capsys, fake_exe, fake_python):
+    fake = FakeBlender(stdout="Blender 5.2.3 LTS\n\tbpy module: Python 3.13.9 at x\n")
+    monkeypatch.setattr(subprocess, "run", fake)
+    code, out, _ = run_cli(capsys, "doctor", "--blender", fake_python, "--json")
+    report = json.loads(out)
+    assert code == 0
+    assert (report["kind"], report["version"], report["found_via"]) == (
+        "bpy",
+        "Blender 5.2.3 LTS",
+        "--blender",
+    )
+    assert fake.calls[0][0] == [str(fake_python), "-I", str(cli.SCRIPTS / "bpy_launcher.py"), "--version"]
+    code, out, _ = run_cli(capsys, "doctor", "--blender", fake_python)
+    assert "kind:      bpy module in a Python interpreter" in out
+    code, out, _ = run_cli(capsys, "doctor", "--blender", fake_exe)
+    assert "kind:      Blender executable" in out
+
+
+def test_doctor_reports_a_python_without_bpy(monkeypatch, capsys, fake_python):
+    monkeypatch.setattr(
+        subprocess,
+        "run",
+        FakeBlender(3, stderr="BQL_LAUNCHER_ERROR: python3.13 cannot import bpy (ModuleNotFoundError)\n"),
+    )
+    code, out, _ = run_cli(capsys, "doctor", "--blender", fake_python)
+    assert code == 1
+    assert "problem:   python3.13 cannot import bpy" in out

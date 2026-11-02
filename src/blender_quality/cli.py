@@ -11,6 +11,7 @@ from .describe import describe, to_markdown
 from .image_metrics import measure_file
 from .runner import (
     DEFAULT_TIMEOUT,
+    KIND_LABELS,
     BlenderError,
     blender_version,
     find_blender,
@@ -50,7 +51,8 @@ def emit_json(data):
 def add_blender_options(parser):
     parser.add_argument(
         "--blender",
-        help="Blender executable (default: $BLENDER, then PATH, then standard install folders)",
+        help="Blender executable or a Python that can import bpy (default: $BLENDER, then PATH, "
+        "then standard install folders, then $BLENDER_PYTHON or this Python if it has bpy)",
     )
     parser.add_argument(
         "--timeout",
@@ -102,7 +104,7 @@ def cmd_build(args):
     if args.render:
         script_args.append("--render")
     run = run_blender(
-        blender.path,
+        blender,
         SCRIPTS / "build_scene.py",
         script_args,
         timeout=args.timeout,
@@ -111,7 +113,7 @@ def cmd_build(args):
     print(f"scene: {scene_path}")
     if args.render:
         print(f"render: {args.output / (args.recipe + '.png')}")
-    print(f"blender: {blender.path} ({run.elapsed:.1f} s)", file=sys.stderr)
+    print(f"blender: {blender.display} ({run.elapsed:.1f} s)", file=sys.stderr)
     return 0
 
 
@@ -144,7 +146,7 @@ def run_inspection(args, output, preview=None):
             str(args.preview_samples),
         ]
     run = run_blender(
-        blender.path,
+        blender,
         SCRIPTS / "inspect_scene.py",
         script_args,
         blend_file=args.scene.resolve(),
@@ -152,8 +154,8 @@ def run_inspection(args, output, preview=None):
         verbose=args.verbose,
     )
     if not output.is_file():
-        raise BlenderError("Blender finished but did not write the inspection JSON")
-    print(f"blender: {blender.path} ({run.elapsed:.1f} s)", file=sys.stderr)
+        raise BlenderError(f"{blender.label} finished but did not write the inspection JSON")
+    print(f"blender: {blender.display} ({run.elapsed:.1f} s)", file=sys.stderr)
     return output
 
 
@@ -167,28 +169,32 @@ def cmd_inspect(args):
 
 
 def cmd_doctor(args):
-    report = {"blender_quality_lab": __version__, "python": sys.version.split()[0]}
+    report = {"blender_quality_lab": __version__, "python": sys.version.split()[0], "blender": None}
     try:
         blender = find_blender(args.blender)
+        report.update(blender=blender.path, kind=blender.kind, found_via=blender.source)
+        report["version"] = blender_version(blender)
     except BlenderError as exc:
-        report.update(blender=None, problem=str(exc))
-    else:
-        report.update(blender=blender.path, found_via=blender.source, version=blender_version(blender.path))
+        report["problem"] = str(exc)
     others = [str(p) for p in install_candidates() if str(p) != report.get("blender")]
     report["other_installs"] = others
+    usable = bool(report["blender"]) and "problem" not in report
     if args.json:
         emit_json(report)
     else:
         print(f"blender-quality-lab {report['blender_quality_lab']} on Python {report['python']}")
         if report["blender"]:
             print(f"Blender: {report['blender']}")
+            print(f"  kind:      {KIND_LABELS[report['kind']]}")
             print(f"  found via: {report['found_via']}")
-            print(f"  version:   {report['version']}")
+            print(f"  version:   {report.get('version') or 'unknown'}")
+            if not usable:
+                print(f"  problem:   {report['problem']}")
         else:
             print(f"Blender: not found. {report['problem']}")
         for path in others:
             print(f"  also installed: {path}")
-    return 0 if report["blender"] else 1
+    return 0 if usable else 1
 
 
 def cmd_score(args):
@@ -342,7 +348,7 @@ def build_parser():
     inspect.set_defaults(handler=cmd_inspect)
 
     doctor = sub.add_parser("doctor", help="show which Blender would be used and its version")
-    doctor.add_argument("--blender", help="check this executable instead of discovering one")
+    doctor.add_argument("--blender", help="check this Blender or Python instead of discovering one")
     doctor.add_argument("--json", action="store_true")
     doctor.set_defaults(handler=cmd_doctor)
 
