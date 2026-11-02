@@ -1,0 +1,95 @@
+name: Blender Quality Lab check
+description: >-
+  Inspect .blend files with Blender's bpy module from PyPI (no Blender install), add each report to
+  the job summary and fail on technical gates.
+author: Alejandro Brito
+branding:
+  icon: check-square
+  color: orange
+
+inputs:
+  files:
+    description: >-
+      Glob of .blend files relative to the workspace; ** matches any folder depth. Several patterns
+      can be separated by spaces or newlines. Hidden folders such as .git are not searched.
+    required: false
+    default: "**/*.blend"
+  strict:
+    description: >-
+      "true" fails the step when any gate fails. "false" only reports. A file that cannot be
+      checked at all (Blender error, unreadable file) fails the step either way.
+    required: false
+    default: "true"
+  subject-collection:
+    description: Collection that holds the subject, passed as --subject-collection (for example ASTRA).
+    required: false
+    default: ""
+  python-version:
+    description: Python for bpy. bpy 5.x wheels are built for Python 3.13; bpy 4.5 for Python 3.11.
+    required: false
+    default: "3.13"
+  bpy-version:
+    description: Version of the bpy module on PyPI, which is Blender's own release (for example 5.2.3 or 4.5.*).
+    required: false
+    default: "5.2.3"
+
+outputs:
+  checked:
+    description: Number of .blend files that were checked (a report was written).
+    value: ${{ steps.check.outputs.checked }}
+  failed:
+    description: Number of checked files with at least one failed gate.
+    value: ${{ steps.check.outputs.failed }}
+  errors:
+    description: Number of files that could not be checked.
+    value: ${{ steps.check.outputs.errors }}
+  reports:
+    description: Folder holding one <file>.quality/ folder per checked file (inspection, preview, reports).
+    value: ${{ steps.check.outputs.reports }}
+
+runs:
+  using: composite
+  steps:
+    - id: python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+        update-environment: false
+
+    - id: install
+      shell: bash
+      env:
+        BQL_BASE_PYTHON: ${{ steps.python.outputs.python-path }}
+        BQL_BPY_VERSION: ${{ inputs.bpy-version }}
+        BQL_ACTION_PATH: ${{ github.action_path }}
+      run: |
+        set -euo pipefail
+        venv="$RUNNER_TEMP/blender-quality-venv"
+        "$BQL_BASE_PYTHON" -m venv "$venv"
+        if [ -x "$venv/bin/python" ]; then python="$venv/bin/python"; else python="$venv/Scripts/python.exe"; fi
+        "$python" -m pip install --disable-pip-version-check --quiet "bpy==$BQL_BPY_VERSION" "$BQL_ACTION_PATH"
+        if [ "$RUNNER_OS" = "Linux" ] && ! "$python" -c "import bpy" > /dev/null 2>&1; then
+          # bpy links against the system X11/GL client libraries; EGL + Mesa render EEVEE headless.
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends \
+            libx11-6 libxext6 libxfixes3 libxi6 libxrender1 libxxf86vm1 libxkbcommon0 libsm6 libice6 \
+            libgl1 libegl1 libegl-mesa0 libgl1-mesa-dri
+        fi
+        echo "python=$python" >> "$GITHUB_OUTPUT"
+        "$python" -m blender_quality doctor --blender "$python"
+
+    - id: check
+      shell: bash
+      working-directory: ${{ github.workspace }}
+      env:
+        BQL_PYTHON: ${{ steps.install.outputs.python }}
+        BQL_FILES: ${{ inputs.files }}
+        BQL_STRICT: ${{ inputs.strict }}
+        BQL_SUBJECT_COLLECTION: ${{ inputs.subject-collection }}
+      run: |
+        "$BQL_PYTHON" -m blender_quality.github_action \
+          --files "$BQL_FILES" \
+          --strict "$BQL_STRICT" \
+          --subject-collection "$BQL_SUBJECT_COLLECTION" \
+          --reports "$RUNNER_TEMP/blender-quality" \
+          --blender "$BQL_PYTHON"
