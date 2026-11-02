@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "blender-quality-lab"
-version = "0.2.0"
+version = "0.3.0"
 description = "Blender scene recipes, vision-free scene inspection with technical gates and fixes, and honest evaluation tooling."
 readme = "README.md"
 requires-python = ">=3.11"

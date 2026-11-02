@@ -2,7 +2,7 @@
 
 **Make 3D quality review repeatable, visible and honest, including for models that cannot see.**
 
-A companion to [Astra Blender Harness](https://github.com/AleBrito124356/astra-blender-harness), useful on its own: three executable Blender scene recipes, six controlled briefs, an isolated scene inspector that describes a scene from its geometry, technical gates, render metrics, a text report with ready-to-run fixes, a scene diff, a run aggregator and a human visual rubric. No model API or paid asset service is required.
+A companion to [Astra Blender Harness](https://github.com/AleBrito124356/astra-blender-harness), useful on its own: three executable Blender scene recipes, six controlled briefs, an isolated scene inspector that describes a scene from its geometry, technical gates, render metrics, a text report with ready-to-run fixes, a scene diff, a run aggregator and a human visual rubric. It runs with an installed Blender or with Blender's `bpy` module from PyPI, so CI and agent loops do not need a Blender install. Harnesses get a [stable Python API](#integration-api), including an inspection that runs inside an already running Blender, a [GitHub Action](#github-action) and an [agent skill](skills/blender-quality/SKILL.md). No model API or paid asset service is required.
 
 ![Reference scene rendered with Blender](docs/abstract.png)
 
@@ -10,25 +10,43 @@ This image is the deterministic **abstract** recipe rendered with Blender 5.2.1.
 
 ## Quick start
 
-Python 3.11+ is required. Blender 4.5 LTS or newer is needed for building and inspecting scenes. The current scripts were verified on Blender 5.2.1 LTS; they keep fallbacks for the 4.x APIs (legacy `action.fcurves`, `use_nodes`), but 4.5 has not been re-tested since the inspector was rewritten. Scoring, describing, measuring, diffing and summarizing need only Python: there are no runtime dependencies.
+Python 3.11+ is required. Building and inspecting scenes needs Blender 4.5 LTS or newer, in one of two forms:
+
+- **No install:** Blender's `bpy` module from PyPI, in a Python that its wheels support: Python 3.13 for bpy 5.x, Python 3.11 for bpy 4.5. It is about 350 MB and renders headless: Cycles on the CPU, EEVEE through EGL (on Linux without a GPU, Mesa's `libegl1` and `libegl-mesa0`).
+- **An installed Blender**, found automatically (see below).
+
+The scripts were verified on Blender 5.2.1 LTS (the executable, on Windows) and through bpy 5.2.3 LTS and 4.5.15 LTS (on Linux); see [docs/validation.md](docs/validation.md). Scoring, describing, measuring, diffing and summarizing need only Python: there are no runtime dependencies.
 
 ```sh
 git clone https://github.com/AleBrito124356/blender-quality-lab.git
 cd blender-quality-lab
-python -m venv .venv
+python3.13 -m venv .venv                                 # 3.13 for `pip install bpy`; any 3.11+ with a Blender install
 # Windows: .venv\Scripts\activate
 # macOS/Linux: source .venv/bin/activate
 python -m pip install -e .
-blender-quality doctor                                   # which Blender will be used, and its version
+python -m pip install bpy                                # skip this line if Blender is installed
+blender-quality doctor                                   # which Blender will be used, what kind, its version
 blender-quality build abstract --output output/abstract  # add --render for the final 960 x 720 image
 blender-quality check output/abstract/abstract.blend     # inspect + preview render + gates + report
 ```
 
-`check` writes `inspection.json`, `preview.png`, `technical.json`, `report.md` and `report.json` next to the scene (`abstract.quality/`, or `--output-dir`) and prints the report. With `--strict` it exits 1 while any gate fails.
+`check` writes `inspection.json`, `preview.png`, `technical.json`, `report.md` and `report.json` next to the scene (`abstract.quality/`, or `--output-dir`) and prints the report (`--json` prints the report JSON instead, and nothing else on stdout). With `--strict` it exits 1 while any gate fails.
 
-Blender is found in this order: `--blender PATH`, the `BLENDER` environment variable, `blender` on PATH, then the standard install folders, preferring the highest version. Those folders are `C:\Program Files\Blender Foundation\Blender *\blender.exe` on Windows, `/Applications/Blender*.app` on macOS, and `/usr/bin`, `/usr/local/bin`, `/snap/bin` and `/opt/blender*` on Linux. `--blender` also accepts an install folder.
+"Blender" is either a Blender executable or a Python interpreter that can import `bpy`. It is found in this order:
 
-Every Blender process starts with `--background --factory-startup --disable-autoexec`. Your add-ons, startup file and preferences are not loaded. Python embedded in a `.blend`, such as registered text blocks and scripted drivers, never runs. `BLENDER_USER_SCRIPTS`/`BLENDER_SYSTEM_SCRIPTS`-style overrides are removed from its environment.
+1. `--blender PATH`, then the `BLENDER` environment variable. Either can name a Blender executable, its install folder or a Python interpreter (`--blender .venv/bin/python`, `--blender python3.13`).
+2. `blender` on PATH.
+3. The standard install folders, preferring the highest version: `C:\Program Files\Blender Foundation\Blender *\blender.exe` on Windows, `/Applications/Blender*.app` on macOS, and `/usr/bin`, `/usr/local/bin`, `/snap/bin` and `/opt/blender*` on Linux.
+4. A Python with bpy: the `BLENDER_PYTHON` environment variable, then the Python running `blender-quality` if it can import `bpy`. These come last, so to prefer a bpy interpreter over an installed Blender, pass it as `--blender` or `BLENDER`.
+
+A path's kind is read from its name (`blender*` or `python*`); any other name is run once with `--version` to see whether Blender or Python answers. `doctor` reports the kind and how it was found.
+
+Every Blender run is isolated, whichever the kind:
+
+- A Blender executable starts with `--background --factory-startup --disable-autoexec`.
+- A bpy interpreter runs [scripts/bpy_launcher.py](src/blender_quality/scripts/bpy_launcher.py) with `python -I`, which accepts exactly that command line and emulates it. Before `bpy` is imported, Blender's per-user folders are pointed at an empty temporary folder. Script autoexec is turned off before the file is opened with `load_ui=False, use_scripts=False`. `sys.argv` holds the Blender-style command line, and an exception in the script exits with code 1. `-I` makes Python ignore `PYTHONPATH` and the user site-packages, as Blender's own Python does.
+
+In both cases your add-ons, startup file and preferences are not loaded. Python embedded in a `.blend`, such as registered text blocks and scripted drivers, never runs. `BLENDER_USER_*`/`BLENDER_SYSTEM_*` overrides, which relocate script, resource or Python folders, are removed from the environment. The integration tests check each of these guarantees on both kinds, with control runs that show the planted scripts do run when isolation is off.
 
 `--timeout SECONDS` (default 600) stops a stuck process. A failure prints one error line plus the last lines of Blender's output, never a Python traceback. Exit code 1 means Blender or a gate failed; exit code 2 means the input was invalid. Pass `--verbose` to see Blender's own log.
 
@@ -115,9 +133,85 @@ The camera and light suggestions are computed: the look-at rotation matches Blen
 A loop for a model without vision:
 
 1. The model builds or edits the scene and saves it.
-2. `blender-quality check scene.blend --strict` (add `--subject-collection ASTRA` for Astra briefs).
-3. The model reads `report.md`, or `report.json` for structured fields, and applies the "Fix first" items. The snippets come from this lab, not from the scene; whether to run them is the harness's decision.
+2. `blender-quality check scene.blend --strict` (add `--subject-collection ASTRA` for Astra briefs). `--json` prints the report as JSON; it is also saved as `report.json`.
+3. The model reads `report.md`, or the `fixes` in the JSON, and applies the "Fix first" items. The snippets come from this lab, not from the scene; whether to run them is the harness's decision.
 4. Repeat until the exit code is 0, then render the final image and run `measure` on it.
+
+[skills/blender-quality/SKILL.md](skills/blender-quality/SKILL.md) teaches this loop to an agent in the Agent Skills format: how to read the report, how to choose `--subject`/`--subject-collection`, when to stop, and what the gates cannot tell.
+
+## Integration API
+
+`blender_quality.api` is the stable interface for harnesses (`API_VERSION = 1`). Within version 1 these signatures and the meaning of every returned key stay as they are. Later releases may add optional keyword arguments, new keys, new warnings and new fixes; consumers should ignore keys they do not know. A breaking change raises `API_VERSION`. The module needs only Python 3.11+; `check` needs a Blender, found as above.
+
+```python
+from blender_quality import api
+
+report = api.check("scene.blend", subject_collection="ASTRA")   # what `check --json` prints
+if not report["all_gates_passed"]:
+    for fix in report["fixes"]:                                  # priority order
+        print(fix["priority"], fix["problem"], fix["python"])
+```
+
+| Function | Returns |
+| --- | --- |
+| `check(path, *, output_dir=None, blender=None, subject=None, subject_collection=None, strict_contact=False, preview=True, timeout=600)` | Exactly what CLI `check` does: the report dict, also written to `report.json`. |
+| `live_inspection_code(*, subject=None, subject_collection=None, contact_scale=None, grid=None, samples=None, animation_samples=None)` | Python source to run inside an already running Blender (below). |
+| `parse_live_output(text)` | The inspection dict from that code's output. |
+| `score(inspection, strict_contact=False)` | The gates and warnings, as `score` prints them. |
+| `describe(inspection, image_metrics=None, fmt="md", *, strict_contact=False)` | The text report: Markdown (`fmt="md"`) or the report dict (`fmt="json"`). |
+| `measure(png_path)` | Exposure and layout metrics of a PNG, as `measure` prints them. |
+| `schema(name)`, `schema_path(name)` | The JSON Schema `"inspection"` (v2) or `"report"` (v1). |
+| `blender_info(blender=None)` | Which Blender would be used: `{"blender", "kind", "found_via", "version"}`, as `doctor --json`. |
+
+`inspection` is a dict or the path of an inspection JSON file; `image_metrics` is a `measure()` dict or the path of a PNG; `subject` and `subject_collection` take a name or a list of names. `check` raises `BlenderError` (`BlenderNotFound` when no usable Blender was found) when Blender cannot run or fails, and `InputError`, a `ValueError`, for a missing scene. `score` and `describe` raise `ValueError` for an inspection they cannot read.
+
+The report (`schemas/report-v1.schema.json`) is the `describe --format json` report plus:
+- `kind` (`"check"`), `report_version` (1), `lab_version` and `strict_contact`;
+- `all_gates_passed` and `checks` (every gate, with `blocked_by`);
+- `markdown` (the text of `report.md`);
+- `files`, `preview` and `blender_runtime` (path, kind and how it was found).
+
+Each fix has `priority` (1 is most urgent; the Markdown lists the fixes under "Fix first" when any has priority 3 or less, otherwise under "Optional improvements"), `id`, `problem`, `action` and `python`, which is `null` when the fix needs judgement. Both schemas are JSON Schema draft 2020-12 and ship in the wheel under `blender_quality/schemas/`. The tests validate every recorded inspection and the reports generated from them against these schemas.
+
+### Inspecting a running Blender
+
+A harness that drives Blender through MCP (for example Blender MCP's `execute_code`) can inspect the open scene without saving it:
+
+```python
+code = api.live_inspection_code(subject_collection="ASTRA")   # or: blender-quality live-code
+output = blender_mcp.execute_code(code)                       # your harness's call
+inspection = api.parse_live_output(output)                    # schema 2, like `inspect`
+print(api.describe(inspection))
+```
+
+The code embeds the inspector's source as a string and runs it in a private namespace. It needs only what a running Blender has (`bpy`, `mathutils`, numpy) and does not use `__file__`, `sys.argv` or this package. It inspects the current scene, opens no file and never saves. It prints exactly one line: `BQL_INSPECTION_JSON:` followed by the inspection. `parse_live_output` finds that line anywhere in the captured output, including after a prefix such as `Code executed successfully: `.
+
+What it changes, and puts back before it returns (also on error):
+- viewport visibility of collections, objects and modifiers, mirrored from render visibility so the evaluated geometry matches the render;
+- the current frame, which moves while animation is sampled. Frame changes run any frame-change handlers registered in that Blender; `animation_samples=0` skips the sampling.
+
+The integration tests run the code the way Blender MCP does, on recipe and broken scenes, and require the same facts as `inspect` on the saved file, the same viewport state, frame and datablocks afterwards, and an unchanged namespace. Limits:
+- The live code renders no preview, so it gives no exposure facts.
+- `file` describes the saved `.blend`, which may differ from the open scene; `inspector.unsaved_changes` says so.
+- In Edit Mode, `mesh_hash` reflects the mesh as it was when Edit Mode was entered (`inspector.context_mode`).
+- Python drivers are counted under `python_drivers_not_evaluated`, but a running Blender may have evaluated them if it allows auto-run scripts.
+
+## GitHub Action
+
+[action.yml](action.yml) checks `.blend` files in a workflow with bpy from PyPI; no Blender download.
+
+```yaml
+- uses: actions/checkout@v4
+- uses: AleBrito124356/blender-quality-lab@v0.3.0   # or a commit SHA
+  with:
+    files: "scenes/**/*.blend"     # default **/*.blend
+    strict: "true"                 # fail the step when a gate fails (default)
+    subject-collection: ASTRA      # optional
+    python-version: "3.13"         # default; 3.11 for bpy 4.5.*
+    bpy-version: "5.2.3"           # default
+```
+
+It installs bpy and this package into a virtual environment, runs `check` on each matching file, and adds a table plus every `report.md` to the job summary. Failed gates become annotations on the file. The outputs are `checked`, `failed`, `errors` and `reports` (the folder of `<file>.quality/` reports, for `actions/upload-artifact`). With `strict: "false"` failed gates are only reported. A file that cannot be checked at all fails the step either way. On Linux runners it installs the X11/GL client libraries bpy links against if `import bpy` fails. The bpy wheel is about 350 MB, so expect a minute or two of installation.
 
 ## Evaluate a model or harness change
 
@@ -179,7 +273,7 @@ Anchors: **0** absent/unusable; **1** major failures; **2** substantial fixes ne
 ## Integration with Astra
 
 1. Paste a brief into Astra (`briefs show ID --prompt-only`), choose your own provider/API, run Studio quality, and download `scene.blend`, its trace and `manifest.json`.
-2. Run `blender-quality check scene.blend --subject-collection ASTRA`, or `inspect` + `score` + `describe`.
+2. Run `blender-quality check scene.blend --subject-collection ASTRA`, or `inspect` + `score` + `describe`. From the harness itself, use `api.check` on the saved file, or `api.live_inspection_code` on the open scene.
 3. Place the manifest and reports in the run layout above and summarize.
 
 The `report.md` of `check` is designed to be fed back to a model that has no vision. Recommended starting models and their official sources live in the [harness README](https://github.com/AleBrito124356/astra-blender-harness#recommended-starting-models). There is no published model leaderboard here.
@@ -188,8 +282,10 @@ The `report.md` of `check` is designed to be fed back to a model that has no vis
 
 ```sh
 python -m pip install -e ".[dev]"
-python -m pytest -q                 # offline: scoring, gates, metrics, describe, diff, summarize, CLI
-python -m pytest -m blender -q      # needs Blender: builds and inspects 14 scenes, repairs 7 broken ones
+python -m pytest -q                 # offline: scoring, gates, metrics, describe, diff, summarize, CLI, API, schemas
+python -m pytest -m blender -q      # needs Blender: builds and inspects 14 scenes, repairs 7 broken ones,
+                                    # checks isolation and the live inspection
+BLENDER=/path/to/python python -m pytest -m blender -q   # the same through a Python that can import bpy
 python -m ruff check src tests examples && python -m ruff format --check src tests examples
 python -m build
 ```
@@ -198,6 +294,6 @@ The pure-Python tests run on inspections and preview renders recorded from real 
 - `BQL_UPDATE_FIXTURES=1 python -m pytest -m blender` re-records the fixtures. `tests/blender/sabotage.py` shows how each broken variant is made.
 - `BQL_UPDATE_SNAPSHOTS=1` accepts intended wording changes in the `describe` snapshots.
 
-The CI template in `docs/github-actions.yml` runs lint, the offline tests and the build without downloading Blender or spending API credits. Copy it to `.github/workflows/ci.yml` and push with a workflow-enabled credential to activate it. See [validation.md](docs/validation.md) for the Blender runtime checks and [CHANGELOG.md](CHANGELOG.md) for behaviour changes.
+[.github/workflows/ci.yml](.github/workflows/ci.yml) runs lint, the offline tests and the build on Linux and Windows with Python 3.11 and 3.13. A second job installs bpy 5.2.3 (Python 3.13) and bpy 4.5 (Python 3.11) from PyPI, runs the Blender integration tests and then runs this repository's own action on two recipe scenes. It downloads no Blender and spends no API credits. See [validation.md](docs/validation.md) for the Blender runtime checks and [CHANGELOG.md](CHANGELOG.md) for behaviour changes.
 
 MIT licensed. Original recipes by Alejandro Brito. Independent of the Blender Foundation.

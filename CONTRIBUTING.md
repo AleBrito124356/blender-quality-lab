@@ -2,7 +2,7 @@
 
 Add original, deterministic recipes and cite any third-party asset licenses. Prefer procedural assets that require no downloads. Every recipe should create a new scene, use named objects/materials and expose camera/lighting choices. A new recipe should pass `blender-quality check --strict --strict-contact`.
 
-Keep technical facts and subjective aesthetic judgments separate. New technical checks must document their false positives/negatives in the README gate table and include tests:
+Keep technical facts and subjective aesthetic judgments separate. `blender_quality.api` is a stable interface (see the README): do not remove or rename its functions, arguments or report keys without raising `API_VERSION`; update `src/blender_quality/schemas/` with any new inspection or report key. New technical checks must document their false positives/negatives in the README gate table and include tests:
 - a pure-Python test on a recorded inspection in `tests/fixtures`;
 - where the check reads Blender data, a variant in `tests/blender/sabotage.py` that it catches in `pytest -m blender`.
 
@@ -10,7 +10,7 @@ A model leaderboard requires matched briefs, budgets, settings, multiple runs an
 
 Before sending a change, run:
 - `python -m pytest`;
-- `python -m pytest -m blender` if Blender is installed (`BQL_UPDATE_FIXTURES=1` re-records fixtures, `BQL_UPDATE_SNAPSHOTS=1` accepts intended report wording changes);
+- `python -m pytest -m blender` with Blender installed, or `BLENDER=/path/to/python python -m pytest -m blender` with a Python that can import bpy (`pip install bpy`; `BQL_UPDATE_FIXTURES=1` re-records fixtures, `BQL_UPDATE_SNAPSHOTS=1` accepts intended report wording changes);
 - `ruff check` and `ruff format --check`;
 - `python -m build`.
 

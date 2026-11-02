@@ -1,5 +1,26 @@
 # Validation record
 
+## 2026-11-02: Linux (Ubuntu 24.04, x86-64, no GPU), bpy 5.2.3 LTS on Python 3.13 and bpy 4.5.15 LTS on Python 3.11
+
+No Blender executable was installed; both runtimes are Blender's `bpy` module from PyPI, run through `scripts/bpy_launcher.py`. Mesa provides software EGL.
+
+- 251 offline tests pass (`python -m pytest`), including the API signatures, both JSON Schemas against every recorded inspection and the reports generated from them, the launcher's emulation order with a fake bpy, and the action loop.
+- `BLENDER=<bpy 5.2.3 python> python -m pytest -m blender`: 60 passed (72 s). `BLENDER=<bpy 4.5.15 python> python -m pytest -m blender`: 60 passed (61 s; the two suites ran in parallel). The fixtures recorded with Blender 5.2.1 are reproduced on both versions; the recipes pass every gate with `--strict-contact`; each sabotage fails exactly its gate; the `describe` fixes repair all seven broken scenes.
+- Isolation, on the bpy kind, each with a control run that shows the planted code fires when isolation is off:
+  - a user startup script in `$XDG_CONFIG_HOME/blender/<version>/scripts/startup` does not run. Imported directly, bpy reports that folder as its user resource path; through the launcher it points at an empty temporary folder;
+  - a startup script in `BLENDER_SYSTEM_SCRIPTS` does not run, because the variable is removed;
+  - `PYTHONPATH` and the user site-packages are ignored (`sys.flags.isolated == 1`);
+  - in a `.blend` with a registered text block and a scripted driver that each write a file, neither runs during `check` (preview render included). Opened with autoexec allowed, both do.
+- Exceptions in a script and `SystemExit` exit with code 1 and their message in the error tail; `--timeout 5` stops a sleeping script; an unreadable `.blend` is an error, not an empty scene.
+- The live inspection code, executed as Blender MCP's `execute_code` does (`exec(code, {"bpy": bpy})`, stdout captured) and with separate globals and locals, gives the same facts as `inspect` on the saved file. Checked on abstract, interior, hidden-collection and animated scenes, and with `--subject`/`--contact-scale`. Afterwards, viewport visibility, the frame and subframe, the datablocks and the namespace are as before. On 4.5, changing viewport state marks the file dirty; on 5.2 it does not. `inspector.unsaved_changes` reports what it was.
+- Found and fixed with bpy 4.5.15: after a scripted driver fails to evaluate (it always does under disabled autoexec), the process hangs at exit in a C++ static destructor in `bpy/__init__.so`. `GlobalState::~GlobalState` destroys a condition variable that its "delayed close" thread still waits on. An `inspect` of any file with a Python driver would have run into the 600 s timeout. The launcher now runs the Python exit handlers, removes Blender's session temp folder, flushes, and exits with `os._exit`. bpy 5.2.3 does not hang, and takes the same exit path.
+- `check` on the abstract recipe, end to end with a 25% Cycles preview: about 2.1 s on either version (preview render 1.1 s).
+- EEVEE renders the `check` preview headless through software EGL with bpy 5.2.3 (7.4 s for a 25% preview with cached shaders).
+- A wheel built with `python -m build` was installed with `bpy==5.2.3` into a fresh Python 3.13 venv. Without `--blender` or `BLENDER`, `doctor` found that venv's Python ("current Python interpreter (bpy is importable)"), and `build interior` plus `check --strict --strict-contact` passed 11/11 gates. The wheel ships both schemas and the launcher.
+- `.github/workflows/ci.yml` passes actionlint; `action.yml` was parsed and its inputs, outputs and steps checked by hand. The action's loop (`python -m blender_quality.github_action`) was run on two real scenes, one with a Python driver, and wrote the summary, the outputs and both reports. The composite steps themselves (setup-python, venv, pip, apt) have not run on GitHub yet.
+
+Not verified in this round: a Blender executable (none was available), macOS and Windows with bpy, the live inspection inside a GUI Blender (it was run inside background bpy, the way Astra's headless worker runs it), and the GitHub-hosted runners.
+
 ## 2026-09-23: Windows 11, Python 3.14.2, Blender 5.2.1 LTS
 
 - 144 offline tests pass (`python -m pytest`): runner and CLI, v1 and v2 gates, PNG decoding, `describe` snapshots, diff, summarize. 46 Blender integration tests pass (`python -m pytest -m blender`, about 3 minutes).
