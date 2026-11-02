@@ -335,3 +335,49 @@ def test_doctor_reports_a_python_without_bpy(monkeypatch, capsys, fake_python):
     code, out, _ = run_cli(capsys, "doctor", "--blender", fake_python)
     assert code == 1
     assert "problem:   python3.13 cannot import bpy" in out
+
+
+def test_check_json_prints_only_the_report(monkeypatch, capsys, tmp_path, fake_exe):
+    fake = FakeBlender(
+        inspection=FIXTURES / "inspections" / "abstract-camera_away.json",
+        preview=FIXTURES / "renders" / "abstract-preview.png",
+    )
+    monkeypatch.setattr(subprocess, "run", fake)
+    scene = tmp_path / "scene.blend"
+    scene.write_bytes(b"BLENDER")
+    code, out, err = run_cli(capsys, "check", scene, "--blender", fake_exe, "--json", "--strict")
+    report = json.loads(out)  # the whole of stdout is one JSON document
+    assert code == 1
+    assert report["kind"] == "check" and report["all_gates_passed"] is False
+    assert report["markdown"].startswith("# Scene report") and report["fixes"][0]["python"]
+    assert report == json.loads((tmp_path / "scene.quality" / "report.json").read_text(encoding="utf-8"))
+    assert "reports:" in err
+
+
+def test_failed_check_leaves_no_stale_reports(monkeypatch, capsys, tmp_path, fake_exe):
+    """A harness reading report.json after a failed run must not get the previous run's report."""
+    scene = tmp_path / "scene.blend"
+    scene.write_bytes(b"BLENDER")
+    monkeypatch.setattr(subprocess, "run", FakeBlender(inspection=FIXTURES / "inspections" / "abstract.json"))
+    assert run_cli(capsys, "check", scene, "--blender", fake_exe)[0] == 0
+    folder = tmp_path / "scene.quality"
+    assert (folder / "report.json").is_file()
+    monkeypatch.setattr(subprocess, "run", FakeBlender(1, stderr="crash\n"))
+    code, _, err = run_cli(capsys, "check", scene, "--blender", fake_exe)
+    assert_clean_error(err, code, 1, "Blender exited with code 1")
+    assert list(folder.iterdir()) == []
+
+
+def test_check_of_a_missing_scene_creates_nothing(capsys, tmp_path, fake_exe):
+    code, _, err = run_cli(capsys, "check", tmp_path / "nope.blend", "--blender", fake_exe)
+    assert_clean_error(err, code, 2, "Scene file does not exist")
+    assert not (tmp_path / "nope.quality").exists()
+
+
+def test_live_code_command_prints_the_api_code(capsys):
+    from blender_quality import api
+
+    code, out, _ = run_cli(capsys, "live-code", "--subject-collection", "ASTRA", "--animation-samples", "0")
+    assert code == 0
+    assert out == api.live_inspection_code(subject_collection=["ASTRA"], animation_samples=0)
+    compile(out, "<live>", "exec")

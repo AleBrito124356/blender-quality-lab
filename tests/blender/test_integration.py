@@ -16,7 +16,7 @@ from pathlib import Path
 
 import pytest
 
-from blender_quality import cli
+from blender_quality import api, cli
 from blender_quality.describe import describe
 from blender_quality.image_metrics import measure_file
 from blender_quality.runner import (
@@ -372,3 +372,81 @@ def test_unreadable_blend_is_an_error_not_an_empty_scene(tmp_path):
             BLENDER, HERE / "probe_datablocks.py", [tmp_path / "x.json"], blend_file=broken, timeout=300
         )
     assert not (tmp_path / "x.json").exists()
+
+
+# ---------------------------------------------------------------- live inspection and the API
+
+
+def run_live(lab, name, tmp_path, **options):
+    code = tmp_path / "live.py"
+    code.write_text(api.live_inspection_code(**options), encoding="utf-8")
+    output = tmp_path / "live.json"
+    run_blender(BLENDER, HERE / "run_live.py", [code, output], blend_file=lab["scenes"][name], timeout=300)
+    return json.loads(output.read_text(encoding="utf-8"))
+
+
+def comparable(inspection):
+    """Drop what legitimately differs between a file and a live run of the same scene."""
+    data = json.loads(json.dumps(inspection))
+    data.pop("preview", None)
+    for key in ("seconds", "mode", "unsaved_changes", "context_mode"):
+        data["inspector"].pop(key, None)
+    return data
+
+
+@pytest.mark.parametrize("name", ["abstract", "interior", "abstract-hidden_collection", "abstract-animated"])
+def test_live_inspection_matches_the_file_inspection_and_restores_state(lab, name, tmp_path):
+    result = run_live(lab, name, tmp_path)
+    assert result["stdout"].count("\n") == 1 and result["stdout"].startswith(api.LIVE_PREFIX)
+    live = api.parse_live_output(result["stdout"])
+    assert live["inspector"]["mode"] == "live"
+    # The helper changed viewport state first; whether that marks the file dirty depends on the version.
+    assert live["inspector"]["unsaved_changes"] is result["before"]["dirty"]
+    assert comparable(live) == comparable(lab["inspections"][name])
+    # exec(code, globals, locals) with separate dicts works too.
+    assert comparable(api.parse_live_output(result["stdout_split_namespace"])) == comparable(live)
+    # Nothing the code touched stays changed, and it leaves nothing behind in the namespace.
+    assert result["after"] == result["before"]
+    assert result["namespace"] == ["bpy"]
+    if name == "abstract-animated":
+        assert len(live["animation"]["motion"]["frames"]) > 2  # it did step through the frames
+    if name == "abstract-hidden_collection":
+        assert result["before"]["collections"] == {"Disabled for render": False}
+
+
+def test_live_inspection_honours_the_subject_options(lab, tmp_path):
+    output = tmp_path / "file.json"
+    command = ["inspect", str(lab["scenes"]["abstract"]), "--output", str(output), "--blender", BLENDER_PATH]
+    assert cli.main([*command, "--subject", "Copper orbit*", "--contact-scale", "2"]) == 0
+    live = api.parse_live_output(
+        run_live(lab, "abstract", tmp_path, subject="Copper orbit*", contact_scale=2)["stdout"]
+    )
+    assert live["subject"]["method"] == "names"
+    assert comparable(live) == comparable(json.loads(output.read_text(encoding="utf-8")))
+
+
+def test_api_check_end_to_end(lab, tmp_path):
+    report = api.check(
+        lab["scenes"]["product"], output_dir=tmp_path / "q", blender=BLENDER_PATH, strict_contact=True
+    )
+    assert report["all_gates_passed"], report["failed_gates"]
+    assert report["blender_runtime"]["kind"] == BLENDER.kind
+    assert report["exposure"]["luminance"]["mean"] > 0.05
+    assert json.loads((tmp_path / "q" / "report.json").read_text(encoding="utf-8")) == report
+    try:
+        import jsonschema
+    except ImportError:
+        return
+    jsonschema.Draft202012Validator(api.schema("report")).validate(report)
+    inspection = json.loads((tmp_path / "q" / "inspection.json").read_text(encoding="utf-8"))
+    jsonschema.Draft202012Validator(api.schema("inspection")).validate(inspection)
+
+
+def test_cli_check_json_end_to_end(lab, tmp_path, capfd):
+    scene = lab["scenes"]["abstract-floating"]
+    command = ["check", str(scene), "--output-dir", str(tmp_path), "--blender", BLENDER_PATH]
+    assert cli.main([*command, "--json", "--strict", "--strict-contact"]) == 1
+    report = json.loads(capfd.readouterr().out)
+    assert [g["id"] for g in report["failed_gates"]] == ["grounded"]
+    floating = next(fix for fix in report["fixes"] if fix["id"] == "floating")
+    assert floating["python"].startswith("for name in") and floating["priority"] == 2

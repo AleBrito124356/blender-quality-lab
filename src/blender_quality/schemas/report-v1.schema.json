@@ -1,0 +1,816 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/AleBrito124356/blender-quality-lab/schemas/report-v1.schema.json",
+  "title": "Blender Quality Lab check report, version 1",
+  "description": "What `blender-quality check --json` prints, what `check` saves as report.json and what blender_quality.api.check returns: the describe report plus every gate, the Markdown report and the written files. Consumers must ignore keys they do not know; report_version changes only when keys are removed or change meaning. $defs/describe is the shape of `describe --format json`.",
+  "allOf": [
+    {
+      "$ref": "#/$defs/describe"
+    },
+    {
+      "type": "object",
+      "required": [
+        "kind",
+        "report_version",
+        "lab_version",
+        "all_gates_passed",
+        "strict_contact",
+        "checks",
+        "preview",
+        "files",
+        "markdown",
+        "blender_runtime"
+      ],
+      "properties": {
+        "kind": {
+          "const": "check"
+        },
+        "report_version": {
+          "const": 1
+        },
+        "lab_version": {
+          "type": "string"
+        },
+        "all_gates_passed": {
+          "type": "boolean",
+          "description": "True when every gate in checks passed."
+        },
+        "strict_contact": {
+          "type": "boolean"
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "passed",
+              "description",
+              "detail"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "passed": {
+                "type": "boolean"
+              },
+              "description": {
+                "type": "string"
+              },
+              "detail": {
+                "type": "string"
+              },
+              "blocked_by": {
+                "$ref": "#/$defs/names"
+              }
+            }
+          }
+        },
+        "preview": {
+          "anyOf": [
+            {
+              "type": "object",
+              "required": [
+                "file"
+              ],
+              "properties": {
+                "file": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "skipped": {
+                  "type": "string"
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "files": {
+          "type": "object",
+          "required": [
+            "inspection",
+            "preview",
+            "technical",
+            "report_md",
+            "report_json"
+          ],
+          "properties": {
+            "inspection": {
+              "type": "string"
+            },
+            "preview": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "technical": {
+              "type": "string"
+            },
+            "report_md": {
+              "type": "string"
+            },
+            "report_json": {
+              "type": "string"
+            }
+          }
+        },
+        "markdown": {
+          "type": "string",
+          "description": "The report.md text; starts with '# Scene report'."
+        },
+        "blender_runtime": {
+          "anyOf": [
+            {
+              "type": "object",
+              "required": [
+                "path",
+                "kind",
+                "found_via"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "kind": {
+                  "enum": [
+                    "blender",
+                    "bpy"
+                  ]
+                },
+                "found_via": {
+                  "type": "string"
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "number": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "vec3": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/number"
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "names": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "channel": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/number"
+        },
+        {
+          "const": "texture"
+        }
+      ]
+    },
+    "warning": {
+      "type": "object",
+      "required": [
+        "id",
+        "severity",
+        "message",
+        "objects"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "warning",
+            "info"
+          ]
+        },
+        "message": {
+          "type": "string"
+        },
+        "objects": {
+          "$ref": "#/$defs/names"
+        }
+      }
+    },
+    "fix": {
+      "type": "object",
+      "required": [
+        "priority",
+        "id",
+        "problem",
+        "action",
+        "python"
+      ],
+      "properties": {
+        "priority": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "1 is most urgent. The Markdown heads the list 'Fix first' when any fix has priority 3 or less, else 'Optional improvements'."
+        },
+        "id": {
+          "type": "string",
+          "description": "The gate, warning or exposure check it fixes."
+        },
+        "problem": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        },
+        "python": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Blender Python that applies the fix, or null when it needs judgement."
+        }
+      }
+    },
+    "describe": {
+      "type": "object",
+      "required": [
+        "scene",
+        "blender",
+        "engine",
+        "resolution",
+        "gates",
+        "failed_gates",
+        "warnings",
+        "grounding",
+        "lighting",
+        "materials",
+        "fixes"
+      ],
+      "properties": {
+        "scene": {
+          "type": "string"
+        },
+        "blender": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "engine": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "resolution": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "gates": {
+          "type": "object",
+          "required": [
+            "passed",
+            "total"
+          ],
+          "properties": {
+            "passed": {
+              "type": "integer"
+            },
+            "total": {
+              "type": "integer"
+            }
+          }
+        },
+        "failed_gates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "detail"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "detail": {
+                "type": "string"
+              },
+              "blocked_by": {
+                "$ref": "#/$defs/names"
+              }
+            }
+          }
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/warning"
+          }
+        },
+        "camera": {
+          "type": "object",
+          "required": [
+            "name",
+            "type",
+            "location"
+          ],
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "type": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "lens_mm": {
+              "$ref": "#/$defs/number"
+            },
+            "location": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/vec3"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "looking": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/vec3"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "fov_deg": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            }
+          }
+        },
+        "frame": {
+          "type": "object",
+          "required": [
+            "background",
+            "objects",
+            "map"
+          ],
+          "properties": {
+            "background": {
+              "$ref": "#/$defs/number"
+            },
+            "objects": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "share",
+                  "char"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "share": {
+                    "$ref": "#/$defs/number"
+                  },
+                  "char": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "map": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "subject": {
+          "type": "object",
+          "required": [
+            "objects",
+            "environment",
+            "chosen_by",
+            "center",
+            "size",
+            "mostly_hidden"
+          ],
+          "properties": {
+            "objects": {
+              "$ref": "#/$defs/names"
+            },
+            "environment": {
+              "$ref": "#/$defs/names"
+            },
+            "chosen_by": {
+              "enum": [
+                "heuristic",
+                "names"
+              ]
+            },
+            "center": {
+              "$ref": "#/$defs/vec3"
+            },
+            "size": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/number"
+              },
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "in_frame": {
+              "$ref": "#/$defs/number"
+            },
+            "coverage": {
+              "$ref": "#/$defs/number"
+            },
+            "occluded": {
+              "$ref": "#/$defs/number"
+            },
+            "cut_off": {
+              "$ref": "#/$defs/names"
+            },
+            "center_screen": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/number"
+                  },
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "distance": {
+              "$ref": "#/$defs/number"
+            },
+            "screen_bbox": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/number"
+              },
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "placement": {
+              "type": "string"
+            },
+            "mostly_hidden": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "hidden",
+                  "behind"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "hidden": {
+                    "$ref": "#/$defs/number"
+                  },
+                  "behind": {
+                    "$ref": "#/$defs/names"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "grounding": {
+          "type": "object",
+          "required": [
+            "floating",
+            "tolerance",
+            "checked"
+          ],
+          "properties": {
+            "floating": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "objects",
+                  "gap",
+                  "above"
+                ],
+                "properties": {
+                  "objects": {
+                    "$ref": "#/$defs/names"
+                  },
+                  "gap": {
+                    "$ref": "#/$defs/number"
+                  },
+                  "above": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            },
+            "tolerance": {
+              "$ref": "#/$defs/number"
+            },
+            "checked": {
+              "type": "integer"
+            }
+          }
+        },
+        "lighting": {
+          "type": "object",
+          "required": [
+            "lights",
+            "key",
+            "fill",
+            "key_to_fill",
+            "world",
+            "emissive_materials"
+          ],
+          "properties": {
+            "lights": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "type",
+                  "energy",
+                  "color",
+                  "reaches_subject",
+                  "irradiance",
+                  "aimed_at_subject",
+                  "role",
+                  "blocked_by"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "energy": {
+                    "$ref": "#/$defs/number"
+                  },
+                  "color": {
+                    "type": "string"
+                  },
+                  "reaches_subject": {
+                    "$ref": "#/$defs/number"
+                  },
+                  "irradiance": {
+                    "$ref": "#/$defs/number"
+                  },
+                  "aimed_at_subject": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ]
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "blocked_by": {
+                    "$ref": "#/$defs/names"
+                  }
+                }
+              }
+            },
+            "key": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "fill": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "key_to_fill": {
+              "$ref": "#/$defs/number"
+            },
+            "world": {
+              "type": "object"
+            },
+            "emissive_materials": {
+              "$ref": "#/$defs/names"
+            }
+          }
+        },
+        "materials": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "looks",
+              "on"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "looks": {
+                "type": "string"
+              },
+              "metallic": {
+                "$ref": "#/$defs/channel"
+              },
+              "roughness": {
+                "$ref": "#/$defs/channel"
+              },
+              "emission": {
+                "type": "boolean"
+              },
+              "see_through": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "on": {
+                "$ref": "#/$defs/names"
+              }
+            }
+          }
+        },
+        "animation": {
+          "type": "object",
+          "required": [
+            "frames",
+            "fps",
+            "animated",
+            "motion",
+            "subject_in_frame_min"
+          ],
+          "properties": {
+            "frames": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "fps": {
+              "$ref": "#/$defs/number"
+            },
+            "animated": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "channels",
+                  "key_range"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "channels": {
+                    "$ref": "#/$defs/names"
+                  },
+                  "key_range": {
+                    "anyOf": [
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/$defs/number"
+                        },
+                        "minItems": 2,
+                        "maxItems": 2
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            "motion": {
+              "type": "object"
+            },
+            "subject_in_frame_min": {
+              "$ref": "#/$defs/number"
+            }
+          }
+        },
+        "exposure": {
+          "type": "object",
+          "required": [
+            "luminance",
+            "warnings"
+          ],
+          "properties": {
+            "luminance": {
+              "type": [
+                "object",
+                "null"
+              ]
+            },
+            "clipped_highlights": {
+              "$ref": "#/$defs/number"
+            },
+            "crushed_shadows": {
+              "$ref": "#/$defs/number"
+            },
+            "detail_center": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/number"
+                  },
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "message"
+                ],
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "message": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "ascii": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "fixes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/fix"
+          }
+        }
+      },
+      "description": "What `describe --format json` prints for a schema 2 inspection."
+    }
+  }
+}

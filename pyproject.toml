@@ -13,7 +13,7 @@ authors = [{name = "Alejandro Brito"}]
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=8,<10", "ruff>=0.11,<1", "build>=1,<2"]
+dev = ["pytest>=8,<10", "ruff>=0.11,<1", "build>=1,<2", "jsonschema>=4.18,<5"]
 
 [project.scripts]
 blender-quality = "blender_quality.cli:main"
