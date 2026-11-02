@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.3.0 - 2026-11-02
+
+### Added
+
+- **Blender without an install.** Every Blender command (`build`, `inspect`, `check`, previews, `pytest -m blender`) also runs through a Python interpreter that can import Blender's `bpy` module from PyPI. `scripts/bpy_launcher.py`, run with `python -I`, accepts exactly the isolated Blender command line and emulates it:
+  - per-user Blender folders point at an empty temporary folder before `bpy` is imported;
+  - autoexec is disabled before the file is opened with `load_ui=False, use_scripts=False`;
+  - `sys.argv` is Blender-style, and a script exception exits with code 1;
+  - a file that cannot be read stops the run.
+- Discovery: `--blender` and `$BLENDER` accept a Blender executable, its folder or a Python interpreter. After PATH and the install folders come `$BLENDER_PYTHON` and then the current interpreter if it can import `bpy`. A path's kind comes from its name, or from a `--version` probe. `doctor` reports the kind (`Blender executable` or `bpy module in a Python interpreter`).
+- **Stable integration API** `blender_quality.api` (`API_VERSION = 1`): `check`, `live_inspection_code`, `parse_live_output`, `score`, `describe`, `measure`, `schema`, `schema_path`, `blender_info`.
+- **Live inspection**: Python source that inspects the current scene of an already running Blender, for example through Blender MCP's `execute_code`. It prints one `BQL_INSPECTION_JSON:` line, opens no file, never saves, and restores the viewport visibility and frame it changes. Also available as `blender-quality live-code`.
+- `check --json` prints the report JSON and nothing else on stdout. `report.json` holds the same report: the `describe` report plus `all_gates_passed`, every gate under `checks`, the Markdown text, the written files and the Blender runtime.
+- JSON Schemas (draft 2020-12) for inspection schema 2 and the report, shipped in the wheel under `blender_quality/schemas/`; the tests validate the recorded fixtures and the reports generated from them.
+- `inspector.mode` (`file` or `live`) in new inspections; live inspections add `unsaved_changes` and `context_mode`.
+- GitHub Action (`action.yml`): installs bpy from PyPI and checks every matching `.blend`. It adds the reports to the job summary and annotates failed gates. In strict mode it fails when a gate fails.
+- `.github/workflows/ci.yml`: lint, offline tests and build on Linux and Windows; Blender integration tests through bpy 5.2.3 and 4.5 from PyPI; the action run on two recipe scenes. It replaces the template in `docs/github-actions.yml`.
+- Agent skill `skills/blender-quality/SKILL.md`: the check, fix, re-check loop, choosing the subject, and the limits of the gates.
+- Integration tests for isolation on either kind, each with a control run that shows the planted code fires when isolation is off: user startup scripts, `BLENDER_SYSTEM_SCRIPTS`, a registered text block and a scripted driver in the `.blend`. Further tests cover script exceptions, `SystemExit`, the timeout, unreadable files, the live inspection against `inspect`, and `api.check` end to end.
+
+### Fixed
+
+- A failed `check` left the previous run's `technical.json`, `report.md` and `report.json` in the output folder, so a harness reading `report.json` after an error got a stale report. All five output files are now removed before the run.
+- `check` of a missing scene created an empty `SCENE.quality/` folder before failing.
+- The environment scrub missed `BLENDER_USER_RESOURCES` and `BLENDER_SYSTEM_RESOURCES` (Blender 4.2+), which relocate the folders startup scripts load from. It also missed `BLENDER_SYSTEM_PYTHON`, which swaps the bundled Python library, and the `*_DATAFILES` overrides.
+- The inspector's animation sampling did not restore the current frame if it failed part-way; it now restores the frame and subframe in all cases.
+
+### Changed (behaviour)
+
+- A Python interpreter passed as `--blender` is now run as a bpy interpreter. Before, it was started with Blender's flags and failed. A Python that cannot import `bpy` gives a `BlenderNotFound` error that explains how to install it.
+- Error messages name the runtime: `Blender (bpy module) exited with code 1 while running inspect_scene.py`.
+- The bpy launcher ends its process without bpy's native shutdown. bpy 4.5 can hang forever in a C++ static destructor after a scripted driver failed to evaluate, which every inspection of a file with a Python driver triggers. The launcher runs the Python exit handlers, removes Blender's session temp folder, flushes output and exits.
+- `report.json` is now the full check report (a superset of the previous `describe` report). `check --format json` prints the same thing as `--json`.
+- Blender 4.5 LTS is verified again: the whole integration suite passes through bpy 4.5.15.
+
 ## 0.2.0 - 2026-09-23
 
 ### Added

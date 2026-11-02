@@ -1,6 +1,6 @@
 """Regenerate examples/runs from real, offline Blender runs (no model, no API).
 
-    python examples/make_example_runs.py            # needs Blender (found like the CLI finds it)
+    python examples/make_example_runs.py            # needs Blender or bpy (found like the CLI finds it)
 
 Layout written: examples/runs/<config>/<brief>/<run>/{manifest.json, technical.json, report.md}.
 
@@ -44,7 +44,7 @@ def write_run(folder, manifest, inspection, strict_contact):
 
 def inspect(blend, output, blender, timeout=600):
     code = cli(
-        ["inspect", str(blend), "--output", str(output), "--blender", blender, "--timeout", str(timeout)]
+        ["inspect", str(blend), "--output", str(output), "--blender", blender.path, "--timeout", str(timeout)]
     )
     if code != 0:
         raise BlenderError(f"inspect exited with {code}")
@@ -52,7 +52,7 @@ def inspect(blend, output, blender, timeout=600):
 
 
 def main():
-    blender = find_blender().path
+    blender = find_blender()  # a Blender executable or a Python that can import bpy
     if RUNS.exists():
         shutil.rmtree(RUNS)
     with tempfile.TemporaryDirectory() as scratch:
@@ -61,7 +61,7 @@ def main():
             for index in range(1, 4):
                 started = time.perf_counter()
                 out = scratch / f"{recipe}-{index}"
-                assert cli(["build", recipe, "--output", str(out), "--blender", blender]) == 0
+                assert cli(["build", recipe, "--output", str(out), "--blender", blender.path]) == 0
                 inspection = inspect(out / f"{recipe}.blend", out / "inspection.json", blender)
                 manifest = {
                     "schema_version": 1,

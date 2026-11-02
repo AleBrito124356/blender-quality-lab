@@ -9,8 +9,12 @@ from . import summarize as run_summary
 from .briefs import brief_text, get_brief, load_briefs
 from .describe import describe, to_markdown
 from .image_metrics import measure_file
+from .live import live_inspection_code
+from .pipeline import SCRIPTS, check_scene, read_json, run_inspection
+from .pipeline import InputError as UsageError
 from .runner import (
     DEFAULT_TIMEOUT,
+    KIND_LABELS,
     BlenderError,
     blender_version,
     find_blender,
@@ -19,28 +23,7 @@ from .runner import (
 )
 from .scoring import RUBRIC, human_report, technical_report
 
-SCRIPTS = Path(__file__).parent / "scripts"
 RECIPES = ["product", "abstract", "interior"]
-
-
-class UsageError(ValueError):
-    """Bad input from the user; reported without a traceback and exit code 2."""
-
-
-def read_json(path):
-    path = Path(path)
-    try:
-        text = path.read_text(encoding="utf-8")
-    except FileNotFoundError:
-        raise UsageError(f"{path}: file not found") from None
-    except OSError as exc:
-        raise UsageError(f"{path}: cannot read ({exc.strerror or exc})") from None
-    try:
-        return json.loads(text)
-    except json.JSONDecodeError as exc:
-        raise UsageError(
-            f"{path}: not valid JSON ({exc.msg} at line {exc.lineno}, column {exc.colno})"
-        ) from None
 
 
 def emit_json(data):
@@ -50,7 +33,8 @@ def emit_json(data):
 def add_blender_options(parser):
     parser.add_argument(
         "--blender",
-        help="Blender executable (default: $BLENDER, then PATH, then standard install folders)",
+        help="Blender executable or a Python that can import bpy (default: $BLENDER, then PATH, "
+        "then standard install folders, then $BLENDER_PYTHON or this Python if it has bpy)",
     )
     parser.add_argument(
         "--timeout",
@@ -102,7 +86,7 @@ def cmd_build(args):
     if args.render:
         script_args.append("--render")
     run = run_blender(
-        blender.path,
+        blender,
         SCRIPTS / "build_scene.py",
         script_args,
         timeout=args.timeout,
@@ -111,54 +95,34 @@ def cmd_build(args):
     print(f"scene: {scene_path}")
     if args.render:
         print(f"render: {args.output / (args.recipe + '.png')}")
-    print(f"blender: {blender.path} ({run.elapsed:.1f} s)", file=sys.stderr)
+    print(f"blender: {blender.display} ({run.elapsed:.1f} s)", file=sys.stderr)
     return 0
 
 
-def inspection_args(args):
+def inspection_options(args):
     """Options forwarded to scripts/inspect_scene.py."""
-    extra = []
-    for name in args.subject:
-        extra += ["--subject", name]
-    for name in args.subject_collection:
-        extra += ["--subject-collection", name]
-    if args.scene_name:
-        extra += ["--scene", args.scene_name]
-    extra += ["--grid", str(args.grid), "--contact-scale", str(args.contact_scale)]
-    return extra
-
-
-def run_inspection(args, output, preview=None):
-    blender = find_blender(args.blender)
-    if not args.scene.is_file():
-        raise UsageError(f"Scene file does not exist: {args.scene}")
-    output.parent.mkdir(parents=True, exist_ok=True)
-    script_args = ["--output", output.resolve(), *inspection_args(args)]
-    if preview is not None:
-        script_args += [
-            "--preview",
-            preview.resolve(),
-            "--preview-percentage",
-            str(args.preview_percentage),
-            "--preview-samples",
-            str(args.preview_samples),
-        ]
-    run = run_blender(
-        blender.path,
-        SCRIPTS / "inspect_scene.py",
-        script_args,
-        blend_file=args.scene.resolve(),
-        timeout=args.timeout,
-        verbose=args.verbose,
-    )
-    if not output.is_file():
-        raise BlenderError("Blender finished but did not write the inspection JSON")
-    print(f"blender: {blender.path} ({run.elapsed:.1f} s)", file=sys.stderr)
-    return output
+    return {
+        "subject": args.subject,
+        "subject_collection": args.subject_collection,
+        "scene_name": args.scene_name,
+        "grid": args.grid,
+        "contact_scale": args.contact_scale,
+        "preview_percentage": args.preview_percentage,
+        "preview_samples": args.preview_samples,
+        "timeout": args.timeout,
+        "verbose": args.verbose,
+    }
 
 
 def cmd_inspect(args):
-    run_inspection(args, args.output, args.preview)
+    blender, run = run_inspection(
+        args.scene,
+        args.output,
+        blender=find_blender(args.blender),
+        preview=args.preview,
+        **inspection_options(args),
+    )
+    print(f"blender: {blender.display} ({run.elapsed:.1f} s)", file=sys.stderr)
     print(f"inspection: {args.output}")
     if args.preview:
         skipped = (read_json(args.output).get("preview") or {}).get("skipped")
@@ -167,28 +131,32 @@ def cmd_inspect(args):
 
 
 def cmd_doctor(args):
-    report = {"blender_quality_lab": __version__, "python": sys.version.split()[0]}
+    report = {"blender_quality_lab": __version__, "python": sys.version.split()[0], "blender": None}
     try:
         blender = find_blender(args.blender)
+        report.update(blender=blender.path, kind=blender.kind, found_via=blender.source)
+        report["version"] = blender_version(blender)
     except BlenderError as exc:
-        report.update(blender=None, problem=str(exc))
-    else:
-        report.update(blender=blender.path, found_via=blender.source, version=blender_version(blender.path))
+        report["problem"] = str(exc)
     others = [str(p) for p in install_candidates() if str(p) != report.get("blender")]
     report["other_installs"] = others
+    usable = bool(report["blender"]) and "problem" not in report
     if args.json:
         emit_json(report)
     else:
         print(f"blender-quality-lab {report['blender_quality_lab']} on Python {report['python']}")
         if report["blender"]:
             print(f"Blender: {report['blender']}")
+            print(f"  kind:      {KIND_LABELS[report['kind']]}")
             print(f"  found via: {report['found_via']}")
-            print(f"  version:   {report['version']}")
+            print(f"  version:   {report.get('version') or 'unknown'}")
+            if not usable:
+                print(f"  problem:   {report['problem']}")
         else:
             print(f"Blender: not found. {report['problem']}")
         for path in others:
             print(f"  also installed: {path}")
-    return 0 if report["blender"] else 1
+    return 0 if usable else 1
 
 
 def cmd_score(args):
@@ -238,24 +206,35 @@ def cmd_describe(args):
 
 
 def cmd_check(args):
-    output_dir = args.output_dir or args.scene.with_name(args.scene.stem + ".quality")
-    output_dir.mkdir(parents=True, exist_ok=True)
-    inspection_path = output_dir / "inspection.json"
-    preview = None if args.no_preview else output_dir / "preview.png"
-    for stale in (inspection_path, output_dir / "preview.png"):
-        stale.unlink(missing_ok=True)  # never measure or report a previous run's files
-    run_inspection(args, inspection_path, preview)
-    metrics = measure_file(preview) if preview is not None and preview.is_file() else None
-    inspection = read_json(inspection_path)
-    report = describe(inspection, metrics, strict_contact=args.strict_contact)
-    technical = technical_report(inspection, strict_contact=args.strict_contact)
-    (output_dir / "technical.json").write_text(json.dumps(technical, indent=2), encoding="utf-8")
-    (output_dir / "report.md").write_text(to_markdown(report), encoding="utf-8")
-    (output_dir / "report.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
-    write_report(report, args.format)
-    print(f"reports: {output_dir}", file=sys.stderr)
-    if args.strict and technical["passed"] != technical["total"]:
+    report = check_scene(
+        args.scene,
+        output_dir=args.output_dir,
+        blender=args.blender,
+        preview=not args.no_preview,
+        strict_contact=args.strict_contact,
+        **inspection_options(args),
+    )
+    runtime = report["blender_runtime"]
+    print(f"blender: {runtime['path']}{' [bpy module]' if runtime['kind'] == 'bpy' else ''}", file=sys.stderr)
+    if args.json or args.format == "json":
+        emit_json(report)
+    else:
+        sys.stdout.write(report["markdown"])
+    print(f"reports: {Path(report['files']['report_md']).parent}", file=sys.stderr)
+    if args.strict and not report["all_gates_passed"]:
         return 1
+    return 0
+
+
+def cmd_live_code(args):
+    sys.stdout.write(
+        live_inspection_code(
+            subject=args.subject or None,
+            subject_collection=args.subject_collection or None,
+            contact_scale=args.contact_scale,
+            animation_samples=args.animation_samples,
+        )
+    )
     return 0
 
 
@@ -342,7 +321,7 @@ def build_parser():
     inspect.set_defaults(handler=cmd_inspect)
 
     doctor = sub.add_parser("doctor", help="show which Blender would be used and its version")
-    doctor.add_argument("--blender", help="check this executable instead of discovering one")
+    doctor.add_argument("--blender", help="check this Blender or Python instead of discovering one")
     doctor.add_argument("--json", action="store_true")
     doctor.set_defaults(handler=cmd_doctor)
 
@@ -376,11 +355,29 @@ def build_parser():
     check.add_argument("--output-dir", type=Path, help="where to write reports (default: SCENE.quality/)")
     check.add_argument("--no-preview", action="store_true", help="skip the small preview render")
     check.add_argument("--format", choices=["md", "json"], default="md")
+    check.add_argument(
+        "--json",
+        action="store_true",
+        help="print the report JSON (what report.json holds); same as --format json",
+    )
     check.add_argument("--strict", action="store_true", help="exit 1 if any gate fails")
     check.add_argument("--strict-contact", action="store_true")
     add_inspection_options(check)
     add_blender_options(check)
     check.set_defaults(handler=cmd_check)
+
+    live = sub.add_parser(
+        "live-code", help="print Python that inspects the current scene of an already running Blender"
+    )
+    live.add_argument("--subject", action="append", default=[], metavar="NAME", help="subject name or glob")
+    live.add_argument("--subject-collection", action="append", default=[], metavar="NAME")
+    live.add_argument("--contact-scale", type=float, help="multiplier for the 5 mm contact tolerance")
+    live.add_argument(
+        "--animation-samples",
+        type=int,
+        help="frames sampled for motion (default 24; 0 never changes the frame)",
+    )
+    live.set_defaults(handler=cmd_live_code)
 
     review = sub.add_parser("review", help="validate a filled rubric and normalize the human score")
     review.add_argument("ratings", type=Path)

@@ -1,0 +1,1261 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/AleBrito124356/blender-quality-lab/schemas/inspection-v2.schema.json",
+  "title": "Blender Quality Lab scene inspection, schema 2",
+  "description": "Written by `blender-quality inspect` and by the live inspection code (blender_quality.api). Facts are computed from scene geometry, not pixels. Numbers that were not finite in Blender are null. Consumers must ignore keys they do not know: later 0.x/1.x releases may add keys without changing schema_version.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "blender_version",
+    "file",
+    "scene",
+    "scenes",
+    "view_layer",
+    "engine",
+    "resolution",
+    "render",
+    "units",
+    "camera",
+    "frame",
+    "subject",
+    "objects",
+    "lights",
+    "world",
+    "materials",
+    "illumination",
+    "contacts",
+    "animation",
+    "missing_images",
+    "inspector"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 2
+    },
+    "blender_version": {
+      "type": "string"
+    },
+    "file": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": [
+            "name",
+            "sha256",
+            "bytes"
+          ],
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "bytes": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "description": "The saved .blend on disk (null for an unsaved scene). In a live inspection it can differ from what was inspected; see inspector.unsaved_changes."
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "scene": {
+      "type": "string"
+    },
+    "scenes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "objects"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "objects": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "view_layer": {
+      "type": "string"
+    },
+    "engine": {
+      "type": "string"
+    },
+    "resolution": {
+      "type": "array",
+      "items": {
+        "type": "integer"
+      },
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "render": {
+      "type": "object",
+      "required": [
+        "samples",
+        "film_transparent",
+        "view_transform",
+        "look",
+        "exposure",
+        "gamma"
+      ],
+      "properties": {
+        "samples": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "film_transparent": {
+          "type": "boolean"
+        },
+        "view_transform": {
+          "type": "string"
+        },
+        "look": {
+          "type": "string"
+        },
+        "exposure": {
+          "$ref": "#/$defs/number"
+        },
+        "gamma": {
+          "$ref": "#/$defs/number"
+        }
+      }
+    },
+    "units": {
+      "type": "object",
+      "required": [
+        "system",
+        "scale_length"
+      ],
+      "properties": {
+        "system": {
+          "type": "string"
+        },
+        "scale_length": {
+          "$ref": "#/$defs/number"
+        }
+      }
+    },
+    "camera": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/camera"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "frame": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/frame"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "subject": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/subject"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "objects": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/object"
+      }
+    },
+    "lights": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/light"
+      }
+    },
+    "world": {
+      "type": "object",
+      "required": [
+        "name",
+        "strength",
+        "color",
+        "textured",
+        "radiance",
+        "film_transparent"
+      ],
+      "properties": {
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "strength": {
+          "$ref": "#/$defs/number"
+        },
+        "color": {
+          "$ref": "#/$defs/vec3"
+        },
+        "textured": {
+          "type": "boolean"
+        },
+        "radiance": {
+          "$ref": "#/$defs/number"
+        },
+        "film_transparent": {
+          "type": "boolean"
+        },
+        "textures": {
+          "$ref": "#/$defs/names"
+        }
+      }
+    },
+    "materials": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/material"
+      }
+    },
+    "illumination": {
+      "type": "object",
+      "required": [
+        "lights",
+        "render_visible_lights",
+        "lights_reaching_subject",
+        "emissive_materials",
+        "unused_emissive_materials"
+      ],
+      "properties": {
+        "lights": {
+          "type": "integer"
+        },
+        "render_visible_lights": {
+          "type": "integer"
+        },
+        "lights_reaching_subject": {
+          "type": "integer"
+        },
+        "emissive_materials": {
+          "$ref": "#/$defs/names"
+        },
+        "unused_emissive_materials": {
+          "$ref": "#/$defs/names"
+        }
+      }
+    },
+    "contacts": {
+      "type": "object",
+      "required": [
+        "tolerance",
+        "floating"
+      ],
+      "properties": {
+        "tolerance": {
+          "$ref": "#/$defs/number"
+        },
+        "floating": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "objects",
+              "gap",
+              "above"
+            ],
+            "properties": {
+              "objects": {
+                "$ref": "#/$defs/names"
+              },
+              "gap": {
+                "$ref": "#/$defs/number"
+              },
+              "above": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "animation": {
+      "$ref": "#/$defs/animation"
+    },
+    "missing_images": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "filepath",
+          "used"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "filepath": {
+            "type": "string"
+          },
+          "used": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "inspector": {
+      "type": "object",
+      "required": [
+        "samples_per_object",
+        "raycast",
+        "raycast_truncated",
+        "seconds"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "file",
+            "live"
+          ],
+          "description": "Absent in inspections written before 0.3.0 (file mode)."
+        },
+        "samples_per_object": {
+          "type": "integer"
+        },
+        "raycast": {
+          "type": "boolean"
+        },
+        "raycast_truncated": {
+          "type": "boolean"
+        },
+        "seconds": {
+          "$ref": "#/$defs/number"
+        },
+        "unsaved_changes": {
+          "type": "boolean",
+          "description": "Live mode: the running Blender had unsaved changes."
+        },
+        "context_mode": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Live mode: bpy.context.mode, e.g. OBJECT or EDIT_MESH."
+        }
+      }
+    },
+    "preview": {
+      "type": "object",
+      "required": [
+        "file"
+      ],
+      "properties": {
+        "file": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "skipped": {
+          "type": "string"
+        },
+        "percentage": {
+          "type": "integer"
+        },
+        "samples": {
+          "type": "integer"
+        },
+        "engine": {
+          "type": "string"
+        },
+        "seconds": {
+          "$ref": "#/$defs/number"
+        }
+      },
+      "description": "Only when a preview render was requested (inspect --preview, check)."
+    }
+  },
+  "$defs": {
+    "number": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "vec3": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/number"
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "numbers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/number"
+      }
+    },
+    "names": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "channel": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/number"
+        },
+        {
+          "const": "texture"
+        }
+      ]
+    },
+    "camera": {
+      "type": "object",
+      "required": [
+        "name",
+        "type",
+        "location",
+        "forward"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "PERSP",
+            "ORTHO",
+            "PANO"
+          ]
+        },
+        "lens_mm": {
+          "$ref": "#/$defs/number"
+        },
+        "ortho_scale": {
+          "$ref": "#/$defs/number"
+        },
+        "sensor_mm": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "sensor_fit": {
+          "type": "string"
+        },
+        "shift": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "clip": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "location": {
+          "$ref": "#/$defs/vec3"
+        },
+        "rotation_euler": {
+          "$ref": "#/$defs/vec3"
+        },
+        "rotation_mode": {
+          "type": "string"
+        },
+        "forward": {
+          "$ref": "#/$defs/vec3"
+        },
+        "up": {
+          "$ref": "#/$defs/vec3"
+        },
+        "right": {
+          "$ref": "#/$defs/vec3"
+        },
+        "hfov_deg": {
+          "$ref": "#/$defs/number"
+        },
+        "vfov_deg": {
+          "$ref": "#/$defs/number"
+        },
+        "dof": {
+          "type": "object",
+          "required": [
+            "use"
+          ],
+          "properties": {
+            "use": {
+              "type": "boolean"
+            },
+            "focus_distance": {
+              "$ref": "#/$defs/number"
+            },
+            "focus_object": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "fstop": {
+              "$ref": "#/$defs/number"
+            }
+          }
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "frame": {
+      "type": "object",
+      "required": [
+        "size",
+        "background",
+        "legend",
+        "rows",
+        "camera_inside"
+      ],
+      "properties": {
+        "size": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "background": {
+          "$ref": "#/$defs/number"
+        },
+        "legend": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Grid character -> object name ('.' is background, '#' an unlisted object)."
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "camera_inside": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "description": "Object-ID grid of the camera frame, top row first."
+    },
+    "subject": {
+      "type": "object",
+      "required": [
+        "method",
+        "objects",
+        "environment",
+        "bbox_min",
+        "bbox_max",
+        "center",
+        "radius",
+        "light_basis"
+      ],
+      "properties": {
+        "method": {
+          "enum": [
+            "heuristic",
+            "names"
+          ]
+        },
+        "objects": {
+          "$ref": "#/$defs/names"
+        },
+        "environment": {
+          "$ref": "#/$defs/names"
+        },
+        "bbox_min": {
+          "$ref": "#/$defs/vec3"
+        },
+        "bbox_max": {
+          "$ref": "#/$defs/vec3"
+        },
+        "center": {
+          "$ref": "#/$defs/vec3"
+        },
+        "radius": {
+          "$ref": "#/$defs/number"
+        },
+        "light_basis": {
+          "type": "string"
+        },
+        "in_frame": {
+          "$ref": "#/$defs/number"
+        },
+        "occluded": {
+          "$ref": "#/$defs/number"
+        },
+        "coverage": {
+          "$ref": "#/$defs/number"
+        },
+        "screen_bbox": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/number"
+          },
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "cut_off": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "left",
+              "right",
+              "bottom",
+              "top"
+            ]
+          }
+        },
+        "center_screen": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "distance": {
+          "$ref": "#/$defs/number"
+        }
+      }
+    },
+    "object": {
+      "type": "object",
+      "required": [
+        "name",
+        "type",
+        "data",
+        "parent",
+        "collections",
+        "hide_render",
+        "render_visible",
+        "camera_visible",
+        "hidden_by",
+        "location",
+        "rotation_euler",
+        "scale",
+        "matrix_world",
+        "finite",
+        "world_determinant",
+        "world_axis_lengths",
+        "degenerate_axes",
+        "material_count",
+        "vertices",
+        "polygons"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "data": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "parent": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "collections": {
+          "$ref": "#/$defs/names"
+        },
+        "hide_render": {
+          "type": "boolean"
+        },
+        "render_visible": {
+          "type": "boolean"
+        },
+        "camera_visible": {
+          "type": "boolean"
+        },
+        "hidden_by": {
+          "$ref": "#/$defs/names"
+        },
+        "location": {
+          "$ref": "#/$defs/vec3"
+        },
+        "rotation_euler": {
+          "$ref": "#/$defs/vec3"
+        },
+        "scale": {
+          "$ref": "#/$defs/vec3"
+        },
+        "matrix_world": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/number"
+            },
+            "minItems": 4,
+            "maxItems": 4
+          },
+          "minItems": 4,
+          "maxItems": 4
+        },
+        "finite": {
+          "type": "boolean"
+        },
+        "world_determinant": {
+          "$ref": "#/$defs/number"
+        },
+        "world_axis_lengths": {
+          "$ref": "#/$defs/vec3"
+        },
+        "degenerate_axes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "material_count": {
+          "type": "integer"
+        },
+        "vertices": {
+          "type": "integer"
+        },
+        "polygons": {
+          "type": "integer"
+        },
+        "mesh_hash": {
+          "type": "string"
+        },
+        "modifiers": {
+          "$ref": "#/$defs/names"
+        },
+        "renders_geometry": {
+          "type": "boolean"
+        },
+        "triangles": {
+          "type": "integer"
+        },
+        "instances": {
+          "type": "integer"
+        },
+        "materials": {
+          "$ref": "#/$defs/names"
+        },
+        "faces_without_material": {
+          "type": "integer"
+        },
+        "area": {
+          "$ref": "#/$defs/number"
+        },
+        "role": {
+          "enum": [
+            "subject",
+            "environment",
+            null
+          ]
+        },
+        "bbox_min": {
+          "$ref": "#/$defs/vec3"
+        },
+        "bbox_max": {
+          "$ref": "#/$defs/vec3"
+        },
+        "dimensions": {
+          "$ref": "#/$defs/vec3"
+        },
+        "raycast_truncated": {
+          "type": "boolean"
+        },
+        "view": {
+          "type": "object",
+          "required": [
+            "in_frame",
+            "coverage"
+          ],
+          "properties": {
+            "in_frame": {
+              "$ref": "#/$defs/number"
+            },
+            "coverage": {
+              "$ref": "#/$defs/number"
+            },
+            "note": {
+              "type": "string"
+            },
+            "behind_camera": {
+              "type": "boolean"
+            },
+            "beyond_clip_end": {
+              "$ref": "#/$defs/number"
+            },
+            "screen_bbox": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/number"
+              },
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "cut_off": {
+              "type": "array",
+              "items": {
+                "enum": [
+                  "left",
+                  "right",
+                  "bottom",
+                  "top"
+                ]
+              }
+            },
+            "center": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/number"
+                  },
+                  "minItems": 2,
+                  "maxItems": 2
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "distance": {
+              "$ref": "#/$defs/number"
+            },
+            "occluded": {
+              "$ref": "#/$defs/number"
+            },
+            "occluded_by": {
+              "$ref": "#/$defs/names"
+            },
+            "seen": {
+              "$ref": "#/$defs/number"
+            }
+          }
+        },
+        "support": {
+          "type": "object",
+          "required": [
+            "touching",
+            "intersecting",
+            "gap_below",
+            "surface_below",
+            "floating"
+          ],
+          "properties": {
+            "touching": {
+              "$ref": "#/$defs/names"
+            },
+            "intersecting": {
+              "$ref": "#/$defs/names"
+            },
+            "gap_below": {
+              "$ref": "#/$defs/number"
+            },
+            "surface_below": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "floating": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "light": {
+      "type": "object",
+      "required": [
+        "name",
+        "type",
+        "energy",
+        "exposure",
+        "color",
+        "use_temperature",
+        "render_visible",
+        "hidden_by",
+        "location",
+        "direction",
+        "cast_shadows",
+        "aimed_at_subject",
+        "reaches_subject",
+        "irradiance"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "POINT",
+            "SUN",
+            "SPOT",
+            "AREA"
+          ]
+        },
+        "energy": {
+          "$ref": "#/$defs/number"
+        },
+        "exposure": {
+          "$ref": "#/$defs/number"
+        },
+        "color": {
+          "$ref": "#/$defs/vec3"
+        },
+        "use_temperature": {
+          "type": "boolean"
+        },
+        "render_visible": {
+          "type": "boolean"
+        },
+        "hidden_by": {
+          "$ref": "#/$defs/names"
+        },
+        "location": {
+          "$ref": "#/$defs/vec3"
+        },
+        "direction": {
+          "$ref": "#/$defs/vec3"
+        },
+        "cast_shadows": {
+          "type": "boolean"
+        },
+        "spot_size_deg": {
+          "$ref": "#/$defs/number"
+        },
+        "shape": {
+          "type": "string"
+        },
+        "size": {
+          "$ref": "#/$defs/number"
+        },
+        "spread_deg": {
+          "$ref": "#/$defs/number"
+        },
+        "normalize": {
+          "type": "boolean"
+        },
+        "angle_deg": {
+          "$ref": "#/$defs/number"
+        },
+        "distance_to_subject": {
+          "$ref": "#/$defs/number"
+        },
+        "angle_off_axis_deg": {
+          "$ref": "#/$defs/number"
+        },
+        "angle_to_camera_deg": {
+          "$ref": "#/$defs/number"
+        },
+        "aimed_at_subject": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "reaches_subject": {
+          "$ref": "#/$defs/number"
+        },
+        "facing_but_blocked": {
+          "$ref": "#/$defs/number"
+        },
+        "blocked_by": {
+          "$ref": "#/$defs/names"
+        },
+        "irradiance": {
+          "$ref": "#/$defs/number"
+        }
+      }
+    },
+    "material": {
+      "type": "object",
+      "required": [
+        "name",
+        "shaders",
+        "emission",
+        "see_through",
+        "images",
+        "users"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "shaders": {
+          "$ref": "#/$defs/names"
+        },
+        "emission": {
+          "anyOf": [
+            {
+              "type": "object",
+              "required": [
+                "strength",
+                "textured",
+                "radiance"
+              ],
+              "properties": {
+                "strength": {
+                  "$ref": "#/$defs/number"
+                },
+                "textured": {
+                  "type": "boolean"
+                },
+                "radiance": {
+                  "$ref": "#/$defs/number"
+                },
+                "color": {
+                  "$ref": "#/$defs/vec3"
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "see_through": {
+          "type": "boolean"
+        },
+        "images": {
+          "$ref": "#/$defs/names"
+        },
+        "users": {
+          "$ref": "#/$defs/names"
+        },
+        "base_color": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/vec3"
+            },
+            {
+              "const": "texture"
+            }
+          ]
+        },
+        "metallic": {
+          "$ref": "#/$defs/channel"
+        },
+        "roughness": {
+          "$ref": "#/$defs/channel"
+        },
+        "transmission": {
+          "$ref": "#/$defs/channel"
+        },
+        "alpha": {
+          "$ref": "#/$defs/channel"
+        }
+      }
+    },
+    "animation": {
+      "type": "object",
+      "required": [
+        "frame_start",
+        "frame_end",
+        "frame_current",
+        "fps",
+        "objects",
+        "python_drivers_not_evaluated"
+      ],
+      "properties": {
+        "frame_start": {
+          "type": "integer"
+        },
+        "frame_end": {
+          "type": "integer"
+        },
+        "frame_current": {
+          "type": "integer"
+        },
+        "fps": {
+          "$ref": "#/$defs/number"
+        },
+        "python_drivers_not_evaluated": {
+          "type": "integer"
+        },
+        "objects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "sources",
+              "channels",
+              "fcurves",
+              "keyframes",
+              "key_range",
+              "non_finite_keys",
+              "keys_before_start",
+              "keys_after_end",
+              "nla_strips"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "sources": {
+                "type": "array",
+                "items": {
+                  "enum": [
+                    "object",
+                    "data",
+                    "shape_keys"
+                  ]
+                }
+              },
+              "channels": {
+                "$ref": "#/$defs/names"
+              },
+              "fcurves": {
+                "type": "integer"
+              },
+              "keyframes": {
+                "type": "integer"
+              },
+              "key_range": {
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/number"
+                    },
+                    "minItems": 2,
+                    "maxItems": 2
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "non_finite_keys": {
+                "type": "integer"
+              },
+              "keys_before_start": {
+                "type": "integer"
+              },
+              "keys_after_end": {
+                "type": "integer"
+              },
+              "nla_strips": {
+                "type": "integer"
+              }
+            }
+          }
+        },
+        "motion": {
+          "type": "object",
+          "required": [
+            "frames",
+            "objects"
+          ],
+          "properties": {
+            "frames": {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            },
+            "objects": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "required": [
+                  "path_length",
+                  "displacement",
+                  "max_speed",
+                  "start",
+                  "end",
+                  "jumps"
+                ],
+                "properties": {
+                  "path_length": {
+                    "$ref": "#/$defs/number"
+                  },
+                  "displacement": {
+                    "$ref": "#/$defs/number"
+                  },
+                  "max_speed": {
+                    "$ref": "#/$defs/number"
+                  },
+                  "start": {
+                    "$ref": "#/$defs/vec3"
+                  },
+                  "end": {
+                    "$ref": "#/$defs/vec3"
+                  },
+                  "jumps": {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/$defs/number"
+                      },
+                      "minItems": 3,
+                      "maxItems": 3
+                    }
+                  }
+                }
+              }
+            },
+            "camera_path_length": {
+              "$ref": "#/$defs/number"
+            },
+            "subject_in_frame": {
+              "$ref": "#/$defs/numbers"
+            }
+          }
+        }
+      }
+    }
+  }
+}

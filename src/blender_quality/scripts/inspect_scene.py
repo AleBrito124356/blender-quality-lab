@@ -1,12 +1,17 @@
-"""Run inside Blender 4.5+ (verified on 5.2 LTS). Collect scene facts; never save the .blend.
+"""Run inside Blender 4.5+ (verified on 4.5 LTS and 5.2 LTS). Collect scene facts; never save the .blend.
 
-`blender-quality inspect` starts Blender with --background --factory-startup --disable-autoexec and
-runs this script, which writes inspection schema v2. The facts are computed from geometry, not from
-pixels, so a model or reviewer without vision can tell what the camera sees, what is cut off or
-hidden, what floats, which lights actually reach the subject and what is animated.
+`blender-quality inspect` starts Blender with --background --factory-startup --disable-autoexec (or
+a Python interpreter with the bpy module, through scripts/bpy_launcher.py) and runs this script,
+which writes inspection schema v2. The facts are computed from geometry, not from pixels, so a model
+or reviewer without vision can tell what the camera sees, what is cut off or hidden, what floats,
+which lights actually reach the subject and what is animated.
 
 The scene is changed only in memory and never saved: render visibility is mirrored into the viewport
 depsgraph so the evaluated geometry (modifiers, instances, geometry nodes) matches what renders.
+
+`live_inspection_line()` inspects the current scene of an already running Blender instead (see
+blender_quality.api.live_inspection_code, which sends this file's source). It records every
+temporary change (viewport visibility, the current frame) and restores it before returning.
 """
 
 import argparse
@@ -61,12 +66,29 @@ def angle_deg(a, b):
     return math.degrees(math.acos(max(-1.0, min(1.0, float(np.dot(a, b)) / (na * nb)))))
 
 
-def safe_set(block, attr, value):
+def safe_set(block, attr, value, changes=None):
+    """Set an attribute if it differs; remember the old value in `changes` so it can be restored."""
     try:
-        if getattr(block, attr) != value:
+        old = getattr(block, attr)
+        if old != value:
             setattr(block, attr, value)
+            if changes is not None:
+                changes.append((block, attr, old))
     except (AttributeError, RuntimeError, TypeError):
         pass  # linked or override data cannot be changed; it keeps its viewport state
+
+
+def restore(changes, view_layer):
+    """Undo what safe_set and mirror_render_visibility recorded, newest first."""
+    for block, attr, old in reversed(changes):
+        try:
+            if attr == "hide_set":
+                block.hide_set(old, view_layer=view_layer)
+            else:
+                setattr(block, attr, old)
+        except (AttributeError, ReferenceError, RuntimeError, TypeError):
+            pass
+    changes.clear()
 
 
 def uses_nodes(block):
@@ -285,27 +307,33 @@ def visibility(obj, paths, view_layer):
     return reasons, camera_reasons
 
 
-def mirror_render_visibility(scene, view_layer):
-    """Make the viewport depsgraph evaluate what the render would (in memory only)."""
+def mirror_render_visibility(scene, view_layer, changes=None):
+    """Make the viewport depsgraph evaluate what the render would (in memory only).
+
+    Every change is appended to `changes` (when given) so restore() can undo it.
+    """
     for coll in bpy.data.collections:
-        safe_set(coll, "hide_viewport", bool(getattr(coll, "hide_render", False)))
+        safe_set(coll, "hide_viewport", bool(getattr(coll, "hide_render", False)), changes)
 
     def unhide(layer):
-        safe_set(layer, "hide_viewport", False)
+        safe_set(layer, "hide_viewport", False, changes)
         for child in layer.children:
             unhide(child)
 
     unhide(view_layer.layer_collection)
     for obj in scene.objects:
-        safe_set(obj, "hide_viewport", obj.hide_render)
+        safe_set(obj, "hide_viewport", obj.hide_render, changes)
         try:
-            obj.hide_set(False, view_layer=view_layer)
+            if obj.hide_get(view_layer=view_layer):
+                obj.hide_set(False, view_layer=view_layer)
+                if changes is not None:
+                    changes.append((obj, "hide_set", True))
         except (RuntimeError, TypeError):
             pass
         if hasattr(obj, "show_instancer_for_render"):
-            safe_set(obj, "show_instancer_for_viewport", obj.show_instancer_for_render)
+            safe_set(obj, "show_instancer_for_viewport", obj.show_instancer_for_render, changes)
         for modifier in obj.modifiers:
-            safe_set(modifier, "show_viewport", modifier.show_render)
+            safe_set(modifier, "show_viewport", modifier.show_render, changes)
 
 
 # ---------------------------------------------------------------- geometry
@@ -995,27 +1023,29 @@ def motion_facts(scene, tracked, camera_obj, subject_names, samples):
     start, end = scene.frame_start, scene.frame_end
     count = max(2, min(samples, end - start + 1))
     frames = sorted({int(round(start + i * (end - start) / (count - 1))) for i in range(count)})
-    original = scene.frame_current
+    original, subframe = scene.frame_current, scene.frame_subframe
     centers = {name: [] for name in tracked}
     subject_in_frame, camera_path = [], []
-    for frame in frames:
-        scene.frame_set(frame)
-        depsgraph = bpy.context.evaluated_depsgraph_get()
-        camera = None
-        if camera_obj is not None and camera_obj.type == "CAMERA" and camera_obj.data.type != "PANO":
-            camera = CameraModel(scene, camera_obj)
-            camera_path.append(camera.origin.copy())
-        subject_points = []
-        for name in tracked:
-            obj = bpy.data.objects[name].evaluated_get(depsgraph)
-            corners = np.array([obj.matrix_world @ Vector(c) for c in obj.bound_box])
-            centers[name].append(corners.mean(axis=0))
-            if name in subject_names:
-                subject_points.append(corners)
-        if camera is not None and subject_points:
-            x, y, z = camera.project(np.concatenate(subject_points))
-            subject_in_frame.append(float(camera.inside(x, y, z).mean()))
-    scene.frame_set(original)
+    try:
+        for frame in frames:
+            scene.frame_set(frame)
+            depsgraph = bpy.context.evaluated_depsgraph_get()
+            camera = None
+            if camera_obj is not None and camera_obj.type == "CAMERA" and camera_obj.data.type != "PANO":
+                camera = CameraModel(scene, camera_obj)
+                camera_path.append(camera.origin.copy())
+            subject_points = []
+            for name in tracked:
+                obj = bpy.data.objects[name].evaluated_get(depsgraph)
+                corners = np.array([obj.matrix_world @ Vector(c) for c in obj.bound_box])
+                centers[name].append(corners.mean(axis=0))
+                if name in subject_names:
+                    subject_points.append(corners)
+            if camera is not None and subject_points:
+                x, y, z = camera.project(np.concatenate(subject_points))
+                subject_in_frame.append(float(camera.inside(x, y, z).mean()))
+    finally:
+        scene.frame_set(original, subframe=subframe)
     fps = scene.render.fps / scene.render.fps_base
     moving = {}
     for name, path in centers.items():
@@ -1110,8 +1140,11 @@ def degenerate_axes(matrix):
 # ---------------------------------------------------------------- main
 
 
-def inspect(args):
+def inspect(args, changes=None, mode="file"):
+    """Inspection schema v2 of the active scene (or --scene). With `changes`, every temporary
+    change is recorded there for restore(); without it the scene is simply left changed in memory."""
     started = time.perf_counter()
+    unsaved = bool(bpy.data.is_dirty)
     if args.scene:
         if args.scene not in bpy.data.scenes:
             raise SystemExit(
@@ -1123,7 +1156,7 @@ def inspect(args):
     unit_scale = scene.unit_settings.scale_length or 1.0
     paths = collection_paths(view_layer)
     vis = {obj.name: visibility(obj, paths, view_layer) for obj in scene.objects}
-    mirror_render_visibility(scene, view_layer)
+    mirror_render_visibility(scene, view_layer, changes)
     owners = collect_geometry(bpy.context.evaluated_depsgraph_get())
 
     camera_obj = scene.camera
@@ -1436,12 +1469,16 @@ def inspect(args):
         "animation": animation,
         "missing_images": missing_images(used_images),
         "inspector": {
+            "mode": mode,
             "samples_per_object": args.samples,
             "raycast": rays.tree is not None,
             "raycast_truncated": any(o["truncated"] for o in owners.values()),
             "seconds": num(time.perf_counter() - started, 2),
         },
     }
+    if mode == "live":
+        # The file facts describe the saved file, which can differ from what was inspected.
+        report["inspector"].update(unsaved_changes=unsaved, context_mode=getattr(bpy.context, "mode", None))
     if args.preview:
         report["preview"] = preview_render(
             scene, Path(args.preview), args.preview_percentage, args.preview_samples
@@ -1460,6 +1497,44 @@ def compact_json(data):
         lambda m: "[" + ", ".join(part.strip() for part in m.group(1).split(",")) + "]",
         text,
     )
+
+
+LIVE_PREFIX = "BQL_INSPECTION_JSON:"
+LIVE_OPTIONS = {
+    "subject": [],
+    "subject_collection": [],
+    "grid": GRID_COLUMNS,
+    "samples": SAMPLES,
+    "contact_scale": 1.0,
+    "animation_samples": ANIMATION_SAMPLES,
+}
+
+
+def live_inspection(**options):
+    """Inspect the current scene of an already running Blender (GUI or background).
+
+    Nothing is saved, no file is opened and no argv is read. Viewport visibility changed to mirror
+    render visibility, and the current frame moved to sample animation, are restored before this
+    returns, also when it fails.
+    """
+    unknown = set(options) - set(LIVE_OPTIONS)
+    if unknown:
+        raise TypeError(f"unknown live inspection options: {', '.join(sorted(unknown))}")
+    values = {**LIVE_OPTIONS, **options}
+    args = argparse.Namespace(
+        output=None, scene=None, preview=None, preview_percentage=25, preview_samples=16, **values
+    )
+    view_layer = bpy.context.view_layer
+    changes = []
+    try:
+        return inspect(args, changes=changes, mode="live")
+    finally:
+        restore(changes, view_layer)
+
+
+def live_inspection_line(**options):
+    """One line: LIVE_PREFIX followed by the inspection as compact, ASCII-only JSON."""
+    return LIVE_PREFIX + json.dumps(live_inspection(**options), separators=(",", ":"), allow_nan=False)
 
 
 def parse(argv):
