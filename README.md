@@ -272,8 +272,16 @@ Anchors: **0** absent/unusable; **1** major failures; **2** substantial fixes ne
 
 ## Integration with Astra
 
-1. Paste a brief into Astra (`briefs show ID --prompt-only`), choose your own provider/API, run Studio quality, and download `scene.blend`, its trace and `manifest.json`.
-2. Run `blender-quality check scene.blend --subject-collection ASTRA`, or `inspect` + `score` + `describe`. From the harness itself, use `api.check` on the saved file, or `api.live_inspection_code` on the open scene.
+Install this package next to [Astra Blender Harness](https://github.com/AleBrito124356/astra-blender-harness) 0.4 or newer and the lab runs on the live scene by itself:
+
+- An agent using `astra-blender mcp` (Claude Code, Codex, Cursor ...) gets a `quality_check` tool: Astra sends `api.live_inspection_code()` to the open or headless Blender as one of its reviewed scripts, then returns `api.score` and the `api.describe` report with its "Fix first" Python. `inspection.json` and `technical.json` land in the agent session folder.
+- The Astra studio and `astra-blender run` offer the same check to the model as `astra_quality_check`, run it in review and apply the fixes in refine; the files are saved with the run.
+- Both need Astra's socket or headless backend. The inspector uses `exec` and numpy, which upstream Blender MCP's safe mode refuses.
+
+To evaluate a model or a harness change with Astra:
+
+1. Paste a brief into Astra (`briefs show ID --prompt-only`), choose your provider, run Studio quality, and keep `scene.blend`, its trace and `manifest.json`.
+2. Run `blender-quality check scene.blend --subject-collection ASTRA` (or `api.check`) on the saved file.
 3. Place the manifest and reports in the run layout above and summarize.
 
 The `report.md` of `check` is designed to be fed back to a model that has no vision. Recommended starting models and their official sources live in the [harness README](https://github.com/AleBrito124356/astra-blender-harness#recommended-starting-models). There is no published model leaderboard here.
